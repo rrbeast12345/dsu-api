@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Track Grants</title>
+     <link rel="stylesheet" href="internal styles.css">
+</head>
+<body onload="putGrants()">
+<div class="sidebar">
+        <div class="sidebar-header">
+            <h2>Dashboard</h2>
+        </div>
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="profile.html" class="nav-link">Profile</a>
+            </li>
+            <li class="nav-item">
+                <a href="add docs.html" class="nav-link">Add Documents</a>
+            </li>
+            <li class="nav-item">
+                <a href="grant programs.html" class="nav-link">Grant Programs</a>
+            </li>
+            <li class="nav-item">
+                <a href="track grants.html" class="nav-link active">Track Grants</a>
+            </li>
+            <li class="nav-item">
+                <a href="consent.html" class="nav-link">Consent</a>
+            </li>
+            <li class="nav-item">
+                <a href="payment.html" class="nav-link">Payment</a>
+            </li>
+
+
+            <li class="nav-item">
+                <a href="sign in.html" class="nav-link">Logout</a>
+            </li>
+        </ul>
+    </div>
+<div class="main-content">
+  <div class="content-header">
+            <h1>Apply for Grant Programs</h1>
+            <p>View and apply for grant programs.</p>
+        </div>
+  <div class="content-body">
+    <h2>Available Grants</h2>
+    <ul class="grant-list" id="grant-list">
+
+    </ul>
+  </div>
+<script>
+    async function putGrants() {
+    const userId = localStorage.getItem('id');
+                const response = await fetch(`http://127.0.0.1:8000/get grants?id=${localStorage.getItem('id')}`, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    mode: 'cors',
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to load user data');
+                }
+
+                const data = await response.json();
+                console.log(data);
+                console.log(data.grants)
+
+                const grant_names = []
+                for (let i = 0; i<data.grants.length; i++ ) {
+                  let item = document.createElement('li')
+                let name = document.createElement('h3')
+                let p = document.createElement('p')
+                let container = document.createElement('div')
+                let amount = document.createElement('div')
+                let requirements = document.createElement('div')
+
+                amount.classList.add('grant-detail')
+                requirements.classList.add('grant-detail')
+                container.classList.add('grant-details')
+                item.classList.add('grant-item')
+
+
+
+                  grant = data.grants[i]
+
+                  console.log('word')
+                  console.log(grant)
+                  name.textContent = grant.grant
+
+                  amount.textContent = 'Approved: ' + grant.approved.substring(0, 10)
+                    p.textContent = grant.description
+
+                  requirements.textContent = 'next payment '+grant.nextPayment.substring(0, 10)
+                  container.appendChild(amount)
+                  container.appendChild(requirements)
+                  item.appendChild(name)
+                  item.appendChild(p)
+                  item.appendChild(container)
+
+
+                  document.getElementById('grant-list').appendChild(item)
+                }
+}
+</script>
+</body>
+</html>

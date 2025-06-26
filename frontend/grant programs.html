@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Grant Programs</title>
+  <link rel="stylesheet" href="internal styles.css">
+</head>
+<body onload="loadUserData()">
+<div class="sidebar">
+        <div class="sidebar-header">
+            <h2>Dashboard</h2>
+        </div>
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="profile.html" class="nav-link">Profile</a>
+            </li>
+            <li class="nav-item">
+                <a href="add docs.html" class="nav-link">Add Documents</a>
+            </li>
+            <li class="nav-item">
+                <a href="grant programs.html" class="nav-link active">Grant Programs</a>
+            </li>
+            <li class="nav-item">
+                <a href="track grants.html" class="nav-link">Track Grants</a>
+            </li>
+            <li class="nav-item">
+                <a href="consent.html" class="nav-link">Consent</a>
+            </li>
+            <li class="nav-item">
+                <a href="payment.html" class="nav-link">Payment</a>
+            </li>
+
+
+            <li class="nav-item">
+                <a href="sign in.html" class="nav-link">Logout</a>
+            </li>
+        </ul>
+    </div>
+<div class="main-content">
+  <div class="content-header">
+            <h1>Apply for Grant Programs</h1>
+            <p>View and apply for grant programs.</p>
+        </div>
+  <div class="content-body">
+    <h2>Available Grants</h2>
+    <ul class="grant-list" id="grant-list">
+
+    </ul>
+  </div>
+
+  <script>
+    async function loadUserData() {
+            try {
+                const userId = localStorage.getItem('id');
+                const response = await fetch(`http://127.0.0.1:8000/check_eligibility?id=${localStorage.getItem('id')}`, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    mode: 'cors',
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to load user data');
+                }
+
+                const data = await response.json();
+                console.log(data);
+
+
+                const grant_names = []
+                for (let i = 0; i<data.grants.length; i++ ) {
+                  let item = document.createElement('li')
+                let name = document.createElement('h3')
+                let p = document.createElement('p')
+                let container = document.createElement('div')
+                let amount = document.createElement('div')
+                let requirements = document.createElement('div')
+                let button = document.createElement('button')
+                amount.classList.add('grant-detail')
+                requirements.classList.add('grant-detail')
+                container.classList.add('grant-details')
+                item.classList.add('grant-item')
+                button.classList.add('apply-btn')
+                  grant = data.grants[i]
+
+                  name.textContent = grant.name
+                  button.textContent = 'Apply Now'
+                  amount.textContent = 'Amount: $' + grant.amount
+                  p.textContent = grant.description
+                  requirements.textContent = 'Requirements: '+grant.requirments
+                  container.appendChild(amount)
+                  container.appendChild(requirements)
+                  item.appendChild(name)
+                  item.appendChild(p)
+                  item.appendChild(container)
+                  item.appendChild(button)
+                    grant_names.push(grant.name)
+
+                  button.addEventListener('click', function(){apply(i, grant_names)})
+
+
+                  document.getElementById('grant-list').appendChild(item)
+                }
+
+
+
+
+
+            } catch (error) {
+                console.log('Error loading user data: ' + error.message, 'error');
+            }
+        }
+        async function apply(number, names) {
+          try {
+              const name = names[number]
+                const userId = localStorage.getItem('id');
+                console.log(`http://127.0.0.1:8000/apply?id=${localStorage.getItem('id')}&grant=${name}`)
+                const response = await fetch(`http://127.0.0.1:8000/apply?id=${localStorage.getItem('id')}&grant=${name}`, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    mode: 'cors',
+                });
+                console.log('in the function the name is: ')
+
+
+                if (!response.ok) {
+                    throw new Error('Failed to load user data');
+                }
+
+                const data = await response.json();
+                console.log(data);
+                if (data.success) {
+                  console.log(data)
+                    alert('application successful')
+                }
+                else{
+                  console.log('fail')
+                  console.log(data)
+                    alert(data.message)
+                }
+
+           } catch (error) {
+                console.log('Error loading user data: ' + error.message, 'error');
+            }
+        }
+  </script>
+
+</div>
+
+
+</body>
+</html>

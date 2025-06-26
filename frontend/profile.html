@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile</title>
+    <link rel="stylesheet" href="internal styles.css">
+
+    </head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2>Dashboard</h2>
+        </div>
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="profile.html" class="nav-link active">Profile</a>
+            </li>
+            <li class="nav-item">
+                <a href="add docs.html" class="nav-link">Add Documents</a>
+            </li>
+
+            <li class="nav-item">
+                <a href="grant programs.html" class="nav-link">Grant Programs</a>
+            </li>
+            <li class="nav-item">
+                <a href="track grants.html" class="nav-link">Track Grants</a>
+            </li>
+            <li class="nav-item">
+                <a href="consent.html" class="nav-link">Consent</a>
+            </li>
+            <li class="nav-item">
+                <a href="payment.html" class="nav-link">Payment</a>
+            </li>
+
+
+            <li class="nav-item">
+                <a href="sign in.html" class="nav-link">Logout</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div class="content-header">
+            <h1>Profile Information</h1>
+            <p>View and edit your personal information.</p>
+        </div>
+        <div class="content-body">
+            <form class="profile-form" id="profileForm">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="id_number">ID Number</label>
+                    <input type="text" id="id_number" name="id_number" required>
+                </div>
+                <div class="form-group">
+                    <label for="dob">Date of Birth</label>
+                    <input type="date" id="dob" name="dob" required>
+                </div>
+                <div class="form-group">
+                    <label for="age">Age</label>
+                    <input type="number" id="age" name="age" required>
+                </div>
+                <div class="form-group">
+                    <label for="age">Income Bracket</label>
+                    <input type="number" id="income bracket" name="age" required>
+                </div>
+                <div class="form-group inline">
+                    <input type="checkbox" id="citizenship" name="citizenship">
+                    <label for="citizenship">Current citizen</label>
+                </div>
+                <button type="submit" class="save-btn">Save Changes</button>
+            </form>
+            <div id="message" class="message" style="display: none;"></div>
+        </div>
+    </div>
+    </div>
+
+    <script>
+        // Function to load user data
+        async function loadUserData() {
+            try {
+                const userId = localStorage.getItem('id');
+                const response = await fetch(`http://127.0.0.1:8000/get_user?id=${localStorage.getItem('id')}`, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    mode: 'cors',
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to load user data');
+                }
+
+                const data = await response.json();
+                
+                // Populate form fields
+                document.getElementById('username').value = data.name || '';
+                document.getElementById('id_number').value = data.id_number || '';
+                document.getElementById('dob').value = data.dob || '';
+                document.getElementById('age').value = data.age === -1 ? '' : (data.age || '');
+                document.getElementById('income bracket').value = data.income_bracket === -1 ? '' : (data.income_bracket || '');
+                document.getElementById('citizenship').checked = data.citizenship_status || false;
+
+            } catch (error) {
+                showMessage('Error loading user data: ' + error.message, 'error');
+            }
+        }
+
+        // Function to save user data
+        async function saveUserData(formData) {
+            try {
+                const userId = localStorage.getItem('id');
+                const response = await fetch(`http://127.0.0.1:8000/update_user?id=${userId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    mode: 'cors',
+                    body: JSON.stringify(formData)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to save user data');
+                }
+
+                showMessage('Profile updated successfully!', 'success');
+            } catch (error) {
+                showMessage('Error saving user data: ' + error.message, 'error');
+            }
+        }
+
+        // Function to show messages
+        function showMessage(text, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = text;
+            messageDiv.className = `message ${type}`;
+            messageDiv.style.display = 'block';
+            
+            // Hide message after 3 seconds
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 3000);
+        }
+
+
+        // Load user data when page loads
+        document.addEventListener('DOMContentLoaded', loadUserData);
+
+        // Handle form submission
+        document.getElementById('profileForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                name: document.getElementById('username').value,
+                income_bracket: document.getElementById('income bracket').value,
+                dob: document.getElementById('dob').value,
+                age: document.getElementById('age').value,
+                citizenship_status: document.getElementById('citizenship').checked
+            };
+
+            await saveUserData(formData);
+        });
+    </script>
+</body>
+</html>
