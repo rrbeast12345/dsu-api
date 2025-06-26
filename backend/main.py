@@ -1,4 +1,3 @@
-
 from fastapi import FastAPI, File, UploadFile
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
@@ -137,7 +136,13 @@ class eligibility(BaseModel):
     income_bracket:int
     age:int
     citizenship_status:bool
-grants = {'Business Grant':[3, 18, True, ['ID', 'Business statement'], 'Apply for business loan', '50k'], 'Social Security':[5, 65, True, ['ID', 'Proof of previous employment'], 'Get social security benefits', '10k'], 'Universal Income':[5, 18, True, ['Bank statement'], 'receive universal income', "300"], 'Rent assistance':[1, 8, -1, ['ID'], 'Apply to get assistance for rent ', '700'], 'Education grant':[3, 18, True, ['ID', 'Grades', 'Senior certificate'], 'Grant to help pay for college', '30k']}
+grants = {
+    'Business Grant': [3, 18, True, ['ID', 'Business Statement'], 'Apply for a business loan', '50k'],
+    'Social Security': [5, 65, True, ['ID', 'Proof of Previous Employment'], 'Get Social Security benefits', '10k'],
+    'Universal Income': [5, 18, True, ['Bank Statement'], 'Receive Universal Income', '300'],
+    'Rent Assistance': [1, 8, -1, ['ID'], 'Apply to get assistance for rent', '700'],
+    'Education Grant': [3, 18, True, ['ID', 'Grades', 'Senior Certificate'], 'Grant to help pay for college', '30k']
+}
 
 
 @app.post('/check_eligibility')

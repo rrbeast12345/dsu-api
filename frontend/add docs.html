@@ -103,15 +103,17 @@
         if (data.files && data.files.length > 0) {
             const grid = document.createElement('div');
             grid.className = 'documents-grid';
-            data.files.forEach(filename => {
+            for (let i = 0; i < data.files.length; i++) {
+
                 const docDiv = document.createElement('div');
                 docDiv.className = 'document-card';
                 docDiv.innerHTML = `
-                    <img src="http://127.0.0.1:8000/uploads/${filename}" alt="${filename}" class="document-image">
+                    <img src="http://127.0.0.1:8000/uploads/${data.files[i]}" alt="${data.files[i]}" class="document-image">
+                    <div class="document-info">${data.docs[i]}</div>
                     
                 `;
                 grid.appendChild(docDiv);
-            });
+            };
             container.appendChild(grid);
         } else {
             container.innerHTML += '<p>No documents uploaded yet.</p>';
