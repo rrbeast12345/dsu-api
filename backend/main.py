@@ -61,7 +61,7 @@ class Person:
         self.identifications = []
         self.grant_ids = []
         self.file_ids = []
-        self.password = ''
+
 
 
 
@@ -71,6 +71,7 @@ class Person:
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
+
 class login_info(BaseModel):
     username: str
     password: str
@@ -111,11 +112,16 @@ def register(item: Item):
     with shelve.open('people/people') as db:
         if item.id_number in db.keys():
             return {'success': False}
+
+
+        with shelve.open('logins/logins') as logins:
+            if not item.name in logins.keys():
+                logins[item.name] = [item.id_number, item.password]
+            else:
+                return {'success': False}
         db[item.id_number] = Person(item.id_number, item.name, item.dob)
-        p = db[item.id_number]
-    with shelve.open('logins/logins') as db:
-        db[item.name] = [item.id_number, item.password]
-    return {'person':p, 'success': True}
+
+        return {'person':db[item.id_number], 'success': True}
 @app.post("/get_user")
 def get(id: str):
 
