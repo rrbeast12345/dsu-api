@@ -13,8 +13,23 @@ import time
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 def timestamp():
     return datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+
 def fixtime(t):
     return  datetime.fromtimestamp(t, tz=timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+def get_age(birthday):
+    birthday = [int(x) for x in birthday.split('-')]
+    now = [int(x) for x in datetime.now(timezone.utc).strftime('%Y/%m/%d').split('/')]
+    years = now[0] - birthday[0]
+    if now[1] == birthday[1]:
+        if now[2] < birthday[2]:
+
+            years -= 1
+    elif now[1] < birthday[1]:
+
+        years -= 1
+    print(birthday)
+    print(now)
+    return years
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # Or specify your frontend origin
@@ -36,7 +51,7 @@ class Person:
         self.dob = dob
         self.verified = False
         self.income_bracket = -1
-        self.age = -1
+        self.age = get_age(dob)
         self.citizenship_status = False
         self.consents = set()
         self.consent_forms = []
@@ -204,7 +219,7 @@ def apply(id:str, grant:str):
 
                 pickle.dump(ids, open('grants/grant.pkl', 'wb'))
 
-                gdb[str(ids)] = {'grant':grant, "timestamp":timestamp(), 'machine_time': time.time()}
+                gdb[str(ids)] = {'grant':grant, "birthday":timestamp(), 'machine_time': time.time()}
             user.current_grants.append(grant)
             user.grant_ids.append(str(ids))
             db[user.id_number] = user
@@ -257,7 +272,7 @@ def record(form:rec):
         with shelve.open('consents/consents') as cts:
             form = form.__dict__
 
-            form['timestamp'] = timestamp()
+            form['birthday'] = timestamp()
             cts[ids] = form
 
         db[user.id_number] = user
@@ -297,7 +312,7 @@ def record_pay(form:payment):
             form = form.__dict__
 
 
-            form['timestamp'] = timestamp()
+            form['birthday'] = timestamp()
             cts[ids] = form
 
 
@@ -326,7 +341,10 @@ def recieve_docs(id:str):
     with shelve.open('people/people') as db:
         user = db[id]
 
-        return {'files':user.file_ids}
+
+
+
+        return {'files':user.file_ids, 'docs':user.identifications}
 @app.post('/enter_identification')
 def enter_identification(id:str, identification:str, image: UploadFile = File(...)):
     with shelve.open('people/people') as db:
@@ -373,7 +391,7 @@ def track_application_status(id:str):
             while (t+gr['machine_time']) < time.time():
                 t += 604800
 
-            grants_names.append({'grant':grant, 'application_status': True, 'approved': gr['timestamp'],'nextPayment':fixtime(gr['machine_time']+t),'application id':ids, 'description':grants[grant][4]})
+            grants_names.append({'grant':grant, 'application_status': True, 'approved': gr['birthday'],'nextPayment':fixtime(gr['machine_time']+t),'application id':ids, 'description':grants[grant][4]})
 
         return {'grants':grants_names}
 class user_put(BaseModel):
@@ -392,7 +410,12 @@ def update_user(id:str, info:user_put):
             except:
                 return {'success': False}
             for attr in vars(info):
-                setattr(user, attr, getattr(info, attr))
+                if attr == 'dob':
+                    if info.dob != user.dob:
+                        get_age(info.dob)
+                        user.age = get_age(info.dob)
+                if not attr == 'age':
+                    setattr(user, attr, getattr(info, attr))
             db[id] = user
             return {'success': True}
 @app.put('/set user')
