@@ -1,4 +1,3 @@
-
 from fastapi import FastAPI, File, UploadFile
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
@@ -10,16 +9,6 @@ import shutil
 
 app = FastAPI()
 import time
-grants = {'Business Grant':[3, 18, True, ['ID', 'Business statement'], 'Apply for business loan', '50k'],
-          'Social Security':[5, 65, True, ['ID', 'Proof of previous employment'], 'Get social security benefits', '10k'],
-          'Universal Income':[5, 18, True, ['Bank statement'], 'Receive universal income', "300"],
-          'Rent Assistance':[1, 21, -1, ['ID'], 'Apply to get assistance for rent ', '700'],
-          'Education Grant':[3, 18, True, ['ID', 'Grades', 'Senior certificate'], 'Grant to help pay for college', '30k'],
-          'immigration Assistance':[2, 13, False, ['Proof of immigration'], 'Get assistance with your immigration to south africa', '5k']
-          }
-consents= ['Send photos', 'See ID', 'Use my data to support application', 'Message my business']
-
-
 # users = {'231':["231", "Thandi Mkhize", "1976-01-01", True],'341':["341", "oliver gardi", "2008-05-23", False]}
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 def timestamp():
@@ -168,7 +157,13 @@ class eligibility(BaseModel):
     income_bracket:int
     age:int
     citizenship_status:bool
-
+grants = {
+    'Business Grant': [3, 18, True, ['ID', 'Business Statement'], 'Apply for a business loan', '50k'],
+    'Social Security': [5, 65, True, ['ID', 'Proof of Previous Employment'], 'Get Social Security benefits', '10k'],
+    'Universal Income': [5, 18, True, ['Bank Statement'], 'Receive Universal Income', '300'],
+    'Rent Assistance': [1, 8, -1, ['ID'], 'Apply to get assistance for rent', '700'],
+    'Education Grant': [3, 18, True, ['ID', 'Grades', 'Senior Certificate'], 'Grant to help pay for college', '30k']
+}
 
 
 @app.post('/check_eligibility')
@@ -217,17 +212,11 @@ def apply(id:str, grant:str):
             reqs = approved_grants[grant]
 
             for item in reqs:
-                if item in user.identifications:
-                    reqs.remove(item)
-
-
-
-            print(reqs)
-            if reqs:
-
-                print('reqs')
-                return  {'success':False, 'message':"you are missing: "+', '.join(reqs)}
-            print('got past')
+                if not item in user.identifications:
+                    print(user.identifications)
+                    print(approved_grants)
+                    print(grant)
+                    return  {'success':False, 'message':"you are missing: "+', '.join(reqs)}
 
 
 
@@ -251,10 +240,11 @@ def get_all_requirements():
             reqs.add(item)
 
     return {'requirements':reqs}
+consents= ['send photos', 'see id', 'use my data to support application']
 
 @app.get('/consent_scopes')
 def consent_scopes():
-    return {'scope':consents}
+    return {'scope':['Send photos', 'See ID', 'Use my data to support application']}
 @app.get('/get_consent')
 def get_consents(id:str):
     with shelve.open('people/people') as db:
@@ -288,7 +278,7 @@ def record(form:rec):
         with shelve.open('consents/consents') as cts:
             form = form.__dict__
 
-            form['date'] = timestamp()
+            form['birthday'] = timestamp()
             cts[ids] = form
 
         db[user.id_number] = user
@@ -393,35 +383,21 @@ def track_application_status(id:str):
     with shelve.open('people/people') as db:
         user = db[id]
         grants_names = []
-        approved_grants = []
-        for item in grants.keys():
-            if user.income_bracket <= grants[item][0] and user.age >= grants[item][1] and (
-                    user.citizenship_status == grants[item][2] or grants[item][2] == -1):
-                approved_grants.append(item)
-
 
         for grant in user.current_grants:
-            if not grant in approved_grants:
-                idex = user.current_grants.index(grant)
-                user.current_grants.pop(idex)
-                user.grant_ids.pop(idex)
-                db[id] = user
-                print('here')
-                print(grant)
-                print(approved_grants)
-            else:
-                ids = user.grant_ids[user.current_grants.index(grant)]
+
+            ids = user.grant_ids[user.current_grants.index(grant)]
 
 
-                with shelve.open('grants/grants') as gdb:
-                    gr = gdb[ids]
+            with shelve.open('grants/grants') as gdb:
+                gr = gdb[ids]
 
-                t = 0
+            t = 0
 
-                while (t+gr['machine_time']) < time.time():
-                    t += 604800
+            while (t+gr['machine_time']) < time.time():
+                t += 604800
 
-                grants_names.append({'grant':grant, 'application_status': True, 'approved': gr['birthday'],'nextPayment':fixtime(gr['machine_time']+t),'application id':ids, 'description':grants[grant][4]})
+            grants_names.append({'grant':grant, 'application_status': True, 'approved': gr['birthday'],'nextPayment':fixtime(gr['machine_time']+t),'application id':ids, 'description':grants[grant][4]})
 
         return {'grants':grants_names}
 class user_put(BaseModel):
@@ -460,7 +436,31 @@ def user_set(id:str, parameter:str, value1:str):
         db[id]= user
         return {'success': True}
 
-
+@app.get('/admin/get_all_applications')
+def get_all_applications():
+    users_data = []
+    with shelve.open('people/people') as db:
+        for user_id in db:
+            user = db[user_id]
+            user_info = {
+                'id_number': user.id_number,
+                'name': user.name,
+                'dob': user.dob,
+                'current_grants': []
+            }
+            for idx, grant in enumerate(user.current_grants):
+                grant_id = user.grant_ids[idx] if idx < len(user.grant_ids) else None
+                grant_details = None
+                if grant_id:
+                    with shelve.open('grants/grants') as gdb:
+                        grant_details = gdb.get(grant_id, None)
+                user_info['current_grants'].append({
+                    'grant_name': grant,
+                    'grant_id': grant_id,
+                    'grant_details': grant_details
+                })
+            users_data.append(user_info)
+    return {'users': users_data}
 
 
 
