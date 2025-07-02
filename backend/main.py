@@ -212,11 +212,14 @@ def apply(id:str, grant:str):
             reqs = approved_grants[grant]
 
             for item in reqs:
+                missing = []
                 if not item in user.identifications:
                     print(user.identifications)
                     print(approved_grants)
                     print(grant)
-                    return  {'success':False, 'message':"you are missing: "+', '.join(reqs)}
+                    missing.append(item)
+                if missing:
+                    return  {'success':False, 'message':"you are missing: "+', '.join(missing)}
 
 
 
@@ -225,7 +228,7 @@ def apply(id:str, grant:str):
 
                 pickle.dump(ids, open('grants/grant.pkl', 'wb'))
 
-                gdb[str(ids)] = {'grant':grant, "birthday":timestamp(), 'machine_time': time.time()}
+                gdb[str(ids)] = {'grant':grant, "submission date":timestamp(), 'machine_time': time.time(), 'approved':False}
             user.current_grants.append(grant)
             user.grant_ids.append(str(ids))
             db[user.id_number] = user
@@ -397,7 +400,7 @@ def track_application_status(id:str):
             while (t+gr['machine_time']) < time.time():
                 t += 604800
 
-            grants_names.append({'grant':grant, 'application_status': True, 'approved': gr['birthday'],'nextPayment':fixtime(gr['machine_time']+t),'application id':ids, 'description':grants[grant][4]})
+            grants_names.append({'grant':grant, 'application_status': True, 'approved': gr['submission date'],'nextPayment':fixtime(gr['machine_time']+t),'application id':ids, 'description':grants[grant][4], 'admin_approved':gr['approved']})
 
         return {'grants':grants_names}
 class user_put(BaseModel):
@@ -437,7 +440,9 @@ def user_set(id:str, parameter:str, value1:str):
         return {'success': True}
 
 @app.get('/admin/get_all_applications')
-def get_all_applications():
+def get_all_applications(password:str):
+    if not password == 'admin123':
+        return {'approved':False}
     users_data = []
     with shelve.open('people/people') as db:
         for user_id in db:
@@ -460,13 +465,12 @@ def get_all_applications():
                     'grant_details': grant_details
                 })
             users_data.append(user_info)
-    return {'users': users_data}
-
+    return {'users': users_data, 'approved':True}
 @app.post('/admin/approve_grant')
 def admin_approve_grant(user_id: str = Body(...), grant_id: str = Body(...)):
     with shelve.open('grants/grants', writeback=True) as gdb:
         if grant_id in gdb:
-            gdb[grant_id]['admin_approved'] = True
+            gdb[grant_id]['approved'] = True
             return {'success': True, 'message': 'Grant approved.'}
         else:
             return {'success': False, 'message': 'Grant not found.'}
@@ -491,8 +495,6 @@ def admin_disapprove_grant(user_id: str = Body(...), grant_id: str = Body(...)):
                 return {'success': False, 'message': 'Grant ID not found for user.'}
         else:
             return {'success': False, 'message': 'User not found.'}
-
-
 
 
 
