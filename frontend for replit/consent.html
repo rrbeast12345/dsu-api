@@ -57,7 +57,7 @@
         async function loadConsentData() {
             try {
                 // Fetch available scopes
-                const scopesResponse = await fetch('http://9e4381a2-27fd-4704-9b5b-6aa5a22fdcea-00-ya5qenwuh8t8.worf.replit.dev/consent_scopes', {
+                const scopesResponse = await fetch('https://9e4381a2-27fd-4704-9b5b-6aa5a22fdcea-00-ya5qenwuh8t8.worf.replit.dev/consent_scopes', {
                     method: 'GET',
                     headers: {
                         'Accept': 'application/json',
@@ -73,7 +73,7 @@
                 console.log(allScopes);
                 // Fetch user's consent data
                 const userId = localStorage.getItem('id');
-                const response = await fetch(`http://9e4381a2-27fd-4704-9b5b-6aa5a22fdcea-00-ya5qenwuh8t8.worf.replit.dev/get_consent?id=${userId}`, {
+                const response = await fetch(`https://9e4381a2-27fd-4704-9b5b-6aa5a22fdcea-00-ya5qenwuh8t8.worf.replit.dev/get_consent?id=${userId}`, {
                     method: 'GET',
                     headers: {
                         'Accept': 'application/json',
@@ -132,7 +132,7 @@
                 const userId = localStorage.getItem('id');
                 // Calculate remove_scope as allScopes minus formData.scope
                 const removeScope = allScopes.filter(scope => !formData.scope.includes(scope));
-                const response = await fetch(`http://9e4381a2-27fd-4704-9b5b-6aa5a22fdcea-00-ya5qenwuh8t8.worf.replit.dev/record_consent`, {
+                const response = await fetch(`https://9e4381a2-27fd-4704-9b5b-6aa5a22fdcea-00-ya5qenwuh8t8.worf.replit.dev/record_consent`, {
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json',

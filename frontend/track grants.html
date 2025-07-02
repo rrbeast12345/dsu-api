@@ -47,6 +47,7 @@
 
     </ul>
   </div>
+</div>
 <script>
     async function putGrants() {
     const userId = localStorage.getItem('id');
@@ -75,32 +76,44 @@
                 let container = document.createElement('div')
                 let amount = document.createElement('div')
                 let requirements = document.createElement('div')
+                let approval = document.createElement('div')
 
                 amount.classList.add('grant-detail')
                 requirements.classList.add('grant-detail')
                 container.classList.add('grant-details')
                 item.classList.add('grant-item')
+                approval.style.marginTop = '8px';
 
+                grant = data.grants[i]
 
+                console.log('word')
+                console.log(grant)
+                name.textContent = grant.grant
 
-                  grant = data.grants[i]
+                amount.textContent = 'Approved: ' + grant.approved.substring(0, 10)
+                p.textContent = grant.description
 
-                  console.log('word')
-                  console.log(grant)
-                  name.textContent = grant.grant
+                requirements.textContent = 'next payment '+grant.nextPayment.substring(0, 10)
 
-                  amount.textContent = 'Approved: ' + grant.approved.substring(0, 10)
-                    p.textContent = grant.description
+                // Approval status
+                if (grant.admin_approved) {
+                    approval.textContent = 'Approved by admin';
+                    approval.style.color = '#27ae60';
+                    approval.style.fontWeight = 'bold';
+                } else {
+                    approval.textContent = 'Not yet approved by admin';
+                    approval.style.color = '#e74c3c';
+                    approval.style.fontWeight = 'bold';
+                }
 
-                  requirements.textContent = 'next payment '+grant.nextPayment.substring(0, 10)
-                  container.appendChild(amount)
-                  container.appendChild(requirements)
-                  item.appendChild(name)
-                  item.appendChild(p)
-                  item.appendChild(container)
+                container.appendChild(amount)
+                container.appendChild(requirements)
+                container.appendChild(approval)
+                item.appendChild(name)
+                item.appendChild(p)
+                item.appendChild(container)
 
-
-                  document.getElementById('grant-list').appendChild(item)
+                document.getElementById('grant-list').appendChild(item)
                 }
 }
 </script>

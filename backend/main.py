@@ -1,4 +1,4 @@
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, File, UploadFile, Body
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 import shelve
@@ -435,6 +435,62 @@ def user_set(id:str, parameter:str, value1:str):
             setattr(user, parameter, value1.split(','))
         db[id]= user
         return {'success': True}
+
+@app.get('/admin/get_all_applications')
+def get_all_applications():
+    users_data = []
+    with shelve.open('people/people') as db:
+        for user_id in db:
+            user = db[user_id]
+            user_info = {
+                'id_number': user.id_number,
+                'name': user.name,
+                'dob': user.dob,
+                'current_grants': []
+            }
+            for idx, grant in enumerate(user.current_grants):
+                grant_id = user.grant_ids[idx] if idx < len(user.grant_ids) else None
+                grant_details = None
+                if grant_id:
+                    with shelve.open('grants/grants') as gdb:
+                        grant_details = gdb.get(grant_id, None)
+                user_info['current_grants'].append({
+                    'grant_name': grant,
+                    'grant_id': grant_id,
+                    'grant_details': grant_details
+                })
+            users_data.append(user_info)
+    return {'users': users_data}
+
+@app.post('/admin/approve_grant')
+def admin_approve_grant(user_id: str = Body(...), grant_id: str = Body(...)):
+    with shelve.open('grants/grants', writeback=True) as gdb:
+        if grant_id in gdb:
+            gdb[grant_id]['admin_approved'] = True
+            return {'success': True, 'message': 'Grant approved.'}
+        else:
+            return {'success': False, 'message': 'Grant not found.'}
+
+@app.post('/admin/disapprove_grant')
+def admin_disapprove_grant(user_id: str = Body(...), grant_id: str = Body(...)):
+    with shelve.open('people/people', writeback=True) as db:
+        if user_id in db:
+            user = db[user_id]
+            if grant_id in user.grant_ids:
+                idx = user.grant_ids.index(grant_id)
+                user.grant_ids.pop(idx)
+                if idx < len(user.current_grants):
+                    user.current_grants.pop(idx)
+                db[user_id] = user
+                # Optionally, remove the grant record
+                with shelve.open('grants/grants', writeback=True) as gdb:
+                    if grant_id in gdb:
+                        del gdb[grant_id]
+                return {'success': True, 'message': 'Grant disapproved and removed.'}
+            else:
+                return {'success': False, 'message': 'Grant ID not found for user.'}
+        else:
+            return {'success': False, 'message': 'User not found.'}
 
 
 
