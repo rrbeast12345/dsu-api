@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Review - User Applications</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f7f9fb;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 30px;
+            color: #2c3e50;
+        }
+        #admin-login {
+            max-width: 350px;
+            margin: 60px auto 0 auto;
+            background: #fff;
+            padding: 32px 24px 24px 24px;
+            border-radius: 10px;
+            box-shadow: 0 2px 16px rgba(44,62,80,0.08);
+            text-align: center;
+        }
+        #admin-login label {
+            font-weight: 500;
+            color: #34495e;
+        }
+        #admin-login input[type="password"] {
+            margin: 12px 0;
+            padding: 8px 12px;
+            border: 1px solid #bfc9d1;
+            border-radius: 5px;
+            width: 80%;
+            font-size: 1em;
+        }
+        #admin-login button {
+            background: #2d8cf0;
+            color: #fff;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        #admin-login button:hover {
+            background: #1976d2;
+        }
+        #admin-content {
+            max-width: 1100px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 32px 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 16px rgba(44,62,80,0.08);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: #fafbfc;
+        }
+        th, td {
+            border: 1px solid #e1e4e8;
+            padding: 12px 10px;
+            text-align: left;
+        }
+        th {
+            background: #f0f4f8;
+            color: #34495e;
+            font-weight: 600;
+        }
+        tr:hover {
+            background: #f5faff;
+        }
+        ul {
+            padding-left: 18px;
+            margin: 0;
+        }
+        .grant-details-list {
+            margin: 6px 0 0 0;
+            padding: 0;
+            list-style: none;
+            background: #f6f8fa;
+            border-radius: 6px;
+            font-size: 0.97em;
+        }
+        .grant-details-list li {
+            padding: 2px 0 2px 8px;
+            border-left: 3px solid #2d8cf0;
+            margin-bottom: 2px;
+        }
+        @media (max-width: 800px) {
+            #admin-content, #admin-login {
+                max-width: 98vw;
+                padding: 10px;
+            }
+            table, th, td {
+                font-size: 0.95em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Admin Review: User Applications</h1>
+    <div id="admin-login">
+        <label for="admin-password">Enter Admin Password:</label><br>
+        <input type="password" id="admin-password">
+        <button onclick="fetchApplications()">Login</button>
+        <p id="login-error" style="color:red;"></p>
+    </div>
+    <div id="admin-content" class="hidden">
+        <table id="applications-table">
+            <thead>
+                <tr>
+                    <th>User ID</th>
+                    <th>Name</th>
+                    <th>Date of Birth</th>
+                    <th>Applications</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <script>
+
+        function formatGrantDetails(details) {
+            if (!details || typeof details !== 'object') return '<em>No details</em>';
+            let html = '<ul class="grant-details-list">';
+            for (const [key, value] of Object.entries(details)) {
+                html += `<li><strong>${key}:</strong> ${typeof value === 'object' ? JSON.stringify(value) : value}</li>`;
+            }
+            html += '</ul>';
+            return html;
+        }
+        function approveGrant(userId, grantId) {
+            fetch('http://localhost:8000/admin/approve_grant', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: userId, grant_id: grantId })
+            })
+            .then(res => res.json())
+                .then(fetchApplications)
+
+        }
+        function disapproveGrant(userId, grantId) {
+            if (!confirm('Are you sure you want to disapprove and remove this grant?')) return;
+            fetch('http://localhost:8000/admin/disapprove_grant', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: userId, grant_id: grantId })
+            })
+            .then(res => res.json())
+                .then(fetchApplications)
+
+        }
+        function fetchApplications() {
+            try{
+                pass = document.getElementById('admin-password').value}
+            catch(err){
+                console.log(err);
+            }
+            fetch(`http://localhost:8000/admin/get_all_applications?password=${pass}`)
+                .then(res => res.json())
+                .then(data => {
+                    const tbody = document.querySelector('#applications-table tbody');
+                    tbody.innerHTML = '';
+                    if (data.approved){
+                        try{
+                        const loginDiv = document.getElementById('admin-login');
+                        loginDiv.parentNode.removeChild(loginDiv);}
+                        catch(err){}
+                        data.users.forEach(user => {
+                            const tr = document.createElement('tr');
+                            tr.innerHTML = `
+                                <td>${user.id_number}</td>
+                                <td>${user.name}</td>
+                                <td>${user.dob}</td>
+                                <td>
+                                    <ul>
+                                        ${user.current_grants.map(grant => `
+                                            <li style="margin-bottom:10px;">
+                                                <strong>${grant.grant_name}</strong><br>
+                                                <span style="color:#888;">ID:</span> ${grant.grant_id || 'N/A'}<br>
+                                                <span style="color:#888;">Details:</span> ${formatGrantDetails(grant.grant_details)}<br>
+                                                <span style="color:${grant.grant_details && grant.grant_details.admin_approved ? '#27ae60' : '#e67e22'}; font-weight:600;">${grant.grant_details && grant.grant_details.admin_approved ? 'Approved' : 'Pending'}</span><br>
+                                                <button onclick="approveGrant('${user.id_number}','${grant.grant_id}')\" style="margin-right:8px;">Approve</button>
+                                                <button onclick="disapproveGrant('${user.id_number}','${grant.grant_id}')\" style="background:#e74c3c;color:#fff;">Disapprove</button>
+                                            </li>
+                                        `).join('')}
+                                    </ul>
+                                </td>
+                            `;
+                            tbody.appendChild(tr);
+                        });}
+                    else {
+                        console.log(password)
+                        console.log(password)
+                        document.getElementById('login-error').innerText = 'Incorrect password.';
+                    }
+                });
+        }
+    </script>
+</body>
+</html> 

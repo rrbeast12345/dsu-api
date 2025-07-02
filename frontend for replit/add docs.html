@@ -53,7 +53,7 @@
                     </select>
                 </div>
               <div class="form-group">
-                    <label for="document">Upload</label>
+                    <label for="document_type">Upload</label>
                     <input type="file" id="document" name="document" required accept="image/*">
                 </div>
                 <button type="submit" class="save-btn">Save</button>
@@ -66,7 +66,7 @@
 <div class="documents-gallery" id="uploaded-documents"></div>
 <script>
     async function getAllRequirments(){
-        const response = await fetch(`http://127.0.0.1:8000/get all requirements`, {
+        const response = await fetch(`https://9e4381a2-27fd-4704-9b5b-6aa5a22fdcea-00-ya5qenwuh8t8.worf.replit.dev/get all requirements`, {
                     method: 'GET',
                     headers: {
                         'Accept': 'application/json',
@@ -90,7 +90,7 @@
     async function loadUploadedDocuments() {
         const userId = localStorage.getItem('id');
         if (!userId) return;
-        const response = await fetch(`http://127.0.0.1:8000/recieve_docs?id=${userId}`, {
+        const response = await fetch(`https://9e4381a2-27fd-4704-9b5b-6aa5a22fdcea-00-ya5qenwuh8t8.worf.replit.dev/recieve_docs?id=${userId}`, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
@@ -108,7 +108,7 @@
                 const docDiv = document.createElement('div');
                 docDiv.className = 'document-card';
                 docDiv.innerHTML = `
-                    <img src="http://127.0.0.1:8000/uploads/${data.files[i]}" alt="${data.files[i]}" class="document-image">
+                    <img src="https://9e4381a2-27fd-4704-9b5b-6aa5a22fdcea-00-ya5qenwuh8t8.worf.replit.dev/uploads/${data.files[i]}" alt="${data.files[i]}" class="document-image">
                     <div class="document-info">${data.docs[i]}</div>
                     
                 `;
@@ -127,7 +127,7 @@
             const formData = new FormData();
             const file = document.getElementById('document').files[0];
             formData.append('image', file);
-            const response = await fetch(`http://127.0.0.1:8000/enter_identification?id=${userId}&identification=${document.getElementById('document_type').value}`, {
+            const response = await fetch(`https://9e4381a2-27fd-4704-9b5b-6aa5a22fdcea-00-ya5qenwuh8t8.worf.replit.dev/enter_identification?id=${userId}&identification=${document.getElementById('document_type').value}`, {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
