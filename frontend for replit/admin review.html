@@ -138,7 +138,7 @@
             return html;
         }
         function approveGrant(userId, grantId) {
-            fetch('http://localhost:8000/admin/approve_grant', {
+            fetch('https://dsu-api.onrender.com/admin/approve_grant', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ user_id: userId, grant_id: grantId })
@@ -149,7 +149,7 @@
         }
         function disapproveGrant(userId, grantId) {
             if (!confirm('Are you sure you want to disapprove and remove this grant?')) return;
-            fetch('http://localhost:8000/admin/disapprove_grant', {
+            fetch('https://dsu-api.onrender.com/admin/disapprove_grant', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ user_id: userId, grant_id: grantId })
@@ -164,7 +164,7 @@
             catch(err){
                 console.log(err);
             }
-            fetch(`http://localhost:8000/admin/get_all_applications?password=${pass}`)
+            fetch(`https://dsu-api.onrender.com/admin/get_all_applications?password=${pass}`)
                 .then(res => res.json())
                 .then(data => {
                     const tbody = document.querySelector('#applications-table tbody');
