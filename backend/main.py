@@ -2,7 +2,7 @@
 
 
 
-from fastapi import FastAPI, File, UploadFile, Body, Request
+from fastapi import FastAPI, File, UploadFile, Body
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 import shelve
@@ -12,7 +12,6 @@ from fastapi.middleware.cors import CORSMiddleware
 import shutil
 from pathlib import Path
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import HTMLResponse
 
 
 
@@ -21,11 +20,7 @@ import time
 # users = {'231':["231", "Thandi Mkhize", "1976-01-01", True],'341':["341", "oliver gardi", "2008-05-23", False]}
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 BASE_DIR = Path(__file__).resolve().parent
-templates = Jinja2Templates(directory=str(BASE_DIR / "frontend for replit"))
-@app.get("/", response_class=HTMLResponse)
-async def read_root(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
-
+app.mount("/", StaticFiles(directory=str(BASE_DIR / "frontend for replit"), html=True), name="static")
 def timestamp():
     return datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
 
@@ -83,9 +78,9 @@ class Person:
 
 
 
-# @app.get("/")
-# def read_root():
-#     return {"Hello": "World"}
+@app.get("/")
+def read_root():
+    return {"Hello": "World"}
 
 class login_info(BaseModel):
     username: str
