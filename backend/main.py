@@ -10,12 +10,16 @@ import pickle
 from datetime import datetime, timezone
 from fastapi.middleware.cors import CORSMiddleware
 import shutil
+from pathlib import Path
+
 
 
 app = FastAPI()
 import time
 # users = {'231':["231", "Thandi Mkhize", "1976-01-01", True],'341':["341", "oliver gardi", "2008-05-23", False]}
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
+BASE_DIR = Path(__file__).resolve().parent
+app.mount("/", StaticFiles(directory=str(BASE_DIR / "frontend for replit"), html=True), name="static")
 def timestamp():
     return datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
 
