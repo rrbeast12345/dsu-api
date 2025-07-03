@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Consent</title>
+    <link rel="stylesheet" href="internal styles.css">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2>Dashboard</h2>
+        </div>
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="profile.html" class="nav-link">Profile</a>
+            </li>
+            <li class="nav-item">
+                <a href="add docs.html" class="nav-link">Add Documents</a>
+            </li>
+            <li class="nav-item">
+                <a href="grant programs.html" class="nav-link">Grant Programs</a>
+            </li>
+            <li class="nav-item">
+                <a href="track grants.html" class="nav-link">Track Grants</a>
+            </li>
+            <li class="nav-item">
+                <a href="consent.html" class="nav-link active">Consent</a>
+            </li>
+            <li class="nav-item">
+                <a href="payment.html" class="nav-link">Payment</a>
+            </li>
+            <li class="nav-item">
+                <a href="sign in.html" class="nav-link">Logout</a>
+            </li>
+        </ul>
+    </div>
+    <div class="main-content">
+        <div class="content-header">
+            <h1>Consent Scopes</h1>
+            <p>View and record your consent preferences.</p>
+        </div>
+        <div class="content-body">
+            <form class="profile-form" id="consentForm">
+                <div class="form-group">
+
+                    <div id="scopes-list"></div>
+                </div>
+                <button type="submit" class="save-btn">Save Consent</button>
+            </form>
+            <div id="message" class="message" style="display: none;"></div>
+        </div>
+    </div>
+    <script>
+        let userConsentedScopes = [];
+        let allScopes = [];
+        // Function to load available scopes and consent data
+        async function loadConsentData() {
+            try {
+                // Fetch available scopes
+                const scopesResponse = await fetch('https://dsu-api.onrender.com/consent_scopes', {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    mode: 'cors',
+                });
+                allScopes = [];
+                if (scopesResponse.ok) {
+                    const scopesData = await scopesResponse.json();
+                    allScopes = scopesData.scope;
+                }
+                console.log(allScopes);
+                // Fetch user's consent data
+                const userId = localStorage.getItem('id');
+                const response = await fetch(`https://dsu-api.onrender.com/get_consent?id=${userId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    mode: 'cors',
+                });
+                userConsentedScopes = [];
+                if (response.ok) {
+                    const data = await response.json();
+                    userConsentedScopes = data.scope;
+                }
+                renderScopesCheckboxes();
+            } catch (error) {
+                // Ignore load errors
+            }
+        }
+        // Render checkboxes for all scopes
+        function renderScopesCheckboxes() {
+            const scopesListDiv = document.getElementById('scopes-list');
+            scopesListDiv.innerHTML = '';
+            console.log(userConsentedScopes);
+            allScopes.forEach(scope => {
+                console.log(scope);
+                const wrapper = document.createElement('div');
+                wrapper.className = 'scope-checkbox';
+                wrapper.style.display = 'flex';
+                wrapper.style.alignItems = 'center';
+                const label = document.createElement('label');
+
+                label.htmlFor = `scope_${scope}`;
+                label.textContent = scope;
+                label.style.marginRight = '8px';
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.id = `scope_${scope}`;
+                checkbox.value = scope;
+                checkbox.name = 'scope';
+
+
+                if (userConsentedScopes.includes(scope)) {
+                    console.log('here')
+                    checkbox.checked = true;
+                }
+
+                wrapper.appendChild(label);
+                wrapper.appendChild(checkbox);
+                scopesListDiv.appendChild(wrapper);
+
+
+            });
+        }
+        // Function to save consent data
+        async function saveConsentData(formData) {
+            try {
+                const userId = localStorage.getItem('id');
+                // Calculate remove_scope as allScopes minus formData.scope
+                const removeScope = allScopes.filter(scope => !formData.scope.includes(scope));
+                const response = await fetch(`https://dsu-api.onrender.com/record_consent`, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    mode: 'cors',
+                    body: JSON.stringify({
+                        id_number: userId,
+                        consent_given: formData.consent_given,
+                        scope: formData.scope,
+                        remove_scope: removeScope
+                    })
+                });
+                if (!response.ok) {
+                    throw new Error('Failed to save consent info');
+                }
+                showMessage('Consent information updated successfully!', 'success');
+            } catch (error) {
+                showMessage('Error saving consent info: ' + error.message, 'error');
+            }
+        }
+        // Function to show messages
+        function showMessage(text, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = text;
+            messageDiv.className = `message ${type}`;
+            messageDiv.style.display = 'block';
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 3000);
+        }
+        // Load consent data when page loads
+        document.addEventListener('DOMContentLoaded', loadConsentData);
+        // Handle form submission
+        document.getElementById('consentForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const checkedScopes = Array.from(document.querySelectorAll('input[name="scope"]:checked')).map(cb => cb.value);
+            const consentGiven = checkedScopes.length > 0;
+            const formData = {
+                consent_given: consentGiven,
+                scope: checkedScopes
+            };
+            await saveConsentData(formData);
+            // Update local state after save
+            userConsentedScopes = checkedScopes;
+            renderScopesCheckboxes();
+        });
+    </script>
+</body>
+</html>
