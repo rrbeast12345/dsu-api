@@ -15,7 +15,7 @@ import shutil
 app = FastAPI()
 import time
 # users = {'231':["231", "Thandi Mkhize", "1976-01-01", True],'341':["341", "oliver gardi", "2008-05-23", False]}
-app.mount("/backend/uploads", StaticFiles(directory="uploads"), name="uploads")
+app.mount("/backend/uploads", StaticFiles(directory="/backend/uploads"), name="uploads")
 def timestamp():
     return datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
 
