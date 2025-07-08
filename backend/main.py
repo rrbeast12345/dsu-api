@@ -13,6 +13,20 @@ import time
 # users = {'231':["231", "Thandi Mkhize", "1976-01-01", True],'341':["341", "oliver gardi", "2008-05-23", False]}
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
+# Mount frontend for replit
+frontend_replit_path = os.path.abspath(os.path.join(os.path.dirname(__file__), 'frontend for replit'))
+print(f"Looking for frontend for replit at: {frontend_replit_path}")
+print(f"Directory exists: {os.path.exists(frontend_replit_path)}")
+
+if os.path.exists(frontend_replit_path):
+    try:
+        app.mount("/frontend", StaticFiles(directory=frontend_replit_path, html=True), name="frontend")
+        print(f"Frontend for replit mounted at /frontend from {frontend_replit_path}")
+    except Exception as e:
+        print(f"Error mounting frontend for replit: {e}")
+else:
+    print(f"Frontend for replit not found at {frontend_replit_path}")
+
 # Mount documentation if it exists
 docusaurus_build_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../my-website/build'))
 print(f"Looking for Docusaurus build at: {docusaurus_build_path}")
