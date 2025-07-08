@@ -27,19 +27,42 @@ if os.path.exists(frontend_replit_path):
 else:
     print(f"Frontend for replit not found at {frontend_replit_path}")
 
-# Mount documentation if it exists
+# Build and mount documentation
+docusaurus_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../my-website'))
 docusaurus_build_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../my-website/build'))
-print(f"Looking for Docusaurus build at: {docusaurus_build_path}")
-print(f"Directory exists: {os.path.exists(docusaurus_build_path)}")
 
-if os.path.exists(docusaurus_build_path):
+print(f"Looking for Docusaurus project at: {docusaurus_path}")
+print(f"Directory exists: {os.path.exists(docusaurus_path)}")
+
+if os.path.exists(docusaurus_path):
     try:
-        app.mount("/documentation", StaticFiles(directory=docusaurus_build_path, html=True), name="documentation")
-        print(f"Documentation mounted at /documentation from {docusaurus_build_path}")
+        # Check if node_modules exists, if not install dependencies
+        node_modules_path = os.path.join(docusaurus_path, 'node_modules')
+        if not os.path.exists(node_modules_path):
+            print("Installing Docusaurus dependencies...")
+            import subprocess
+            subprocess.run(['npm', 'install'], cwd=docusaurus_path, check=True)
+            print("Dependencies installed successfully")
+        
+        # Build the documentation
+        print("Building Docusaurus documentation...")
+        import subprocess
+        subprocess.run(['npm', 'run', 'build'], cwd=docusaurus_path, check=True)
+        print("Documentation built successfully")
+        
+        # Mount the built documentation
+        if os.path.exists(docusaurus_build_path):
+            app.mount("/documentation", StaticFiles(directory=docusaurus_build_path, html=True), name="documentation")
+            print(f"Documentation mounted at /documentation from {docusaurus_build_path}")
+        else:
+            print(f"Build directory not found at {docusaurus_build_path}")
+            
+    except subprocess.CalledProcessError as e:
+        print(f"Error building documentation: {e}")
     except Exception as e:
         print(f"Error mounting documentation: {e}")
 else:
-    print(f"Docusaurus build not found at {docusaurus_build_path}")
+    print(f"Docusaurus project not found at {docusaurus_path}")
 
 
 def timestamp():
