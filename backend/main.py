@@ -28,8 +28,8 @@ else:
     print(f"Frontend for replit not found at {frontend_replit_path}")
 
 # Build and mount documentation
-docusaurus_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../my-website'))
-docusaurus_build_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../my-website/build'))
+docusaurus_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'my-website'))
+docusaurus_build_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'my-website', 'build'))
 
 print(f"Looking for Docusaurus project at: {docusaurus_path}")
 print(f"Directory exists: {os.path.exists(docusaurus_path)}")
@@ -60,13 +60,17 @@ if os.path.exists(docusaurus_path):
             print(f"Documentation mounted at /documentation from {docusaurus_build_path}")
         else:
             print(f"Documentation build not found at {docusaurus_build_path}")
+            print("Documentation will not be available at /documentation")
             
     except subprocess.CalledProcessError as e:
         print(f"Error building documentation: {e}")
+        print("Documentation will not be available at /documentation")
     except Exception as e:
         print(f"Error mounting documentation: {e}")
+        print("Documentation will not be available at /documentation")
 else:
     print(f"Docusaurus project not found at {docusaurus_path}")
+    print("Documentation will not be available at /documentation")
 
 
 def timestamp():
@@ -133,10 +137,21 @@ def read_root():
 @app.get("/health")
 def health_check():
     """Health check endpoint"""
-    docs_available = os.path.exists("docs")
+    docs_available = os.path.exists(docusaurus_build_path)
     return {
         "status": "healthy",
         "documentation": "available" if docs_available else "not_available",
+        "timestamp": timestamp()
+    }
+
+@app.get("/docs")
+def docs_info():
+    """Documentation info endpoint"""
+    docs_available = os.path.exists(docusaurus_build_path)
+    return {
+        "documentation_available": docs_available,
+        "documentation_url": "/documentation" if docs_available else None,
+        "message": "Documentation is available at /documentation" if docs_available else "Documentation is not available. Set BUILD_DOCS=true to build it.",
         "timestamp": timestamp()
     }
 

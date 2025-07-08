@@ -3,14 +3,16 @@ services:
     name: dsu-api
     env: python
     plan: free
+    rootDir: backend
     buildCommand: |
-      cd backend
       pip install -r requirements.txt
-    startCommand: |
-      cd backend
-      python run.py
+      cd ..
+      python backend/build_docs.py
+    startCommand: python run.py
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.0
       - key: PORT
-        value: 8000 
+        value: 8000
+      - key: BUILD_DOCS
+        value: true 
