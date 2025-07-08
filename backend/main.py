@@ -1,7 +1,3 @@
-
-
-
-
 from fastapi import FastAPI, File, UploadFile, Body
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
@@ -10,19 +6,20 @@ import pickle
 from datetime import datetime, timezone
 from fastapi.middleware.cors import CORSMiddleware
 import shutil
-from pathlib import Path
-
-
-
+import os
 
 app = FastAPI()
 import time
 # users = {'231':["231", "Thandi Mkhize", "1976-01-01", True],'341':["341", "oliver gardi", "2008-05-23", False]}
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
-BASE_DIR = Path(__file__).resolve().parent
-app.mount("/frontend", StaticFiles(directory=str(BASE_DIR / "frontend for replit"), html=True), name="frontend for replit")
-
+# Mount documentation if it exists
+docs_path = "docs"
+if os.path.exists(docs_path):
+    app.mount("/docs", StaticFiles(directory=docs_path), name="documentation")
+    print(f"Documentation mounted at /docs from {docs_path}")
+else:
+    print(f"Documentation not found at {docs_path}. Run 'python build-docs.py' to build and copy documentation.")
 def timestamp():
     return datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
 
@@ -82,7 +79,27 @@ class Person:
 
 @app.get("/")
 def read_root():
-    return {"Hello": "World"}
+    return {
+        "message": "DSU API - Digital Services Unit Grant Management System",
+        "version": "1.0.0",
+        "endpoints": {
+            "api": "/",
+            "documentation": "/docs" if os.path.exists("docs") else "Not available - run 'python build-docs.py'",
+            "uploads": "/uploads",
+            "health": "/health"
+        },
+        "status": "running"
+    }
+
+@app.get("/health")
+def health_check():
+    """Health check endpoint"""
+    docs_available = os.path.exists("docs")
+    return {
+        "status": "healthy",
+        "documentation": "available" if docs_available else "not_available",
+        "timestamp": timestamp()
+    }
 
 class login_info(BaseModel):
     username: str
@@ -224,14 +241,11 @@ def apply(id:str, grant:str):
             reqs = approved_grants[grant]
 
             for item in reqs:
-                missing = []
                 if not item in user.identifications:
                     print(user.identifications)
                     print(approved_grants)
                     print(grant)
-                    missing.append(item)
-                if missing:
-                    return  {'success':False, 'message':"you are missing: "+', '.join(missing)}
+                    return  {'success':False, 'message':"you are missing: "+', '.join(reqs)}
 
 
 
@@ -255,11 +269,11 @@ def get_all_requirements():
             reqs.add(item)
 
     return {'requirements':reqs}
-consents= ['Send photos', 'See ID', 'Use my data to support application']
+consents= ['send photos', 'see id', 'use my data to support application']
 
 @app.get('/consent_scopes')
 def consent_scopes():
-    return {'scope':consents}
+    return {'scope':['Send photos', 'See ID', 'Use my data to support application']}
 @app.get('/get_consent')
 def get_consents(id:str):
     with shelve.open('people/people') as db:
@@ -412,7 +426,7 @@ def track_application_status(id:str):
             while (t+gr['machine_time']) < time.time():
                 t += 604800
 
-            grants_names.append({'grant':grant, 'application_status': True, 'approved': gr['submission date'],'nextPayment':fixtime(gr['machine_time']+t),'application id':ids, 'description':grants[grant][4], 'admin_approved':gr['approved']})
+            grants_names.append({'grant':grant, 'application_status': True, 'approved': gr['birthday'],'nextPayment':fixtime(gr['machine_time']+t),'application id':ids, 'description':grants[grant][4]})
 
         return {'grants':grants_names}
 class user_put(BaseModel):
