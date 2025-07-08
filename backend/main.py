@@ -14,12 +14,10 @@ import time
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
 # Mount documentation if it exists
-docs_path = "docs"
-if os.path.exists(docs_path):
-    app.mount("/docs", StaticFiles(directory=docs_path), name="documentation")
-    print(f"Documentation mounted at /docs from {docs_path}")
-else:
-    print(f"Documentation not found at {docs_path}. Run 'python build-docs.py' to build and copy documentation.")
+if os.path.exists("../my-website/build"):
+    app.mount("/documentation", StaticFiles(directory="../my-website/build"), name="documentation")
+
+
 def timestamp():
     return datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
 
@@ -79,17 +77,7 @@ class Person:
 
 @app.get("/")
 def read_root():
-    return {
-        "message": "DSU API - Digital Services Unit Grant Management System",
-        "version": "1.0.0",
-        "endpoints": {
-            "api": "/",
-            "documentation": "/docs" if os.path.exists("docs") else "Not available - run 'python build-docs.py'",
-            "uploads": "/uploads",
-            "health": "/health"
-        },
-        "status": "running"
-    }
+    return {'success': True}
 
 @app.get("/health")
 def health_check():
