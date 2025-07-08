@@ -255,11 +255,11 @@ def get_all_requirements():
             reqs.add(item)
 
     return {'requirements':reqs}
-consents= ['send photos', 'see id', 'use my data to support application']
+consents= ['Send photos', 'See ID', 'Use my data to support application']
 
 @app.get('/consent_scopes')
 def consent_scopes():
-    return {'scope':['Send photos', 'See ID', 'Use my data to support application']}
+    return {'scope':consents}
 @app.get('/get_consent')
 def get_consents(id:str):
     with shelve.open('people/people') as db:
