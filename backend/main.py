@@ -36,26 +36,30 @@ print(f"Directory exists: {os.path.exists(docusaurus_path)}")
 
 if os.path.exists(docusaurus_path):
     try:
-        # Check if node_modules exists, if not install dependencies
-        node_modules_path = os.path.join(docusaurus_path, 'node_modules')
-        if not os.path.exists(node_modules_path):
-            print("Installing Docusaurus dependencies...")
+        # Only build documentation in development or if explicitly requested
+        should_build = os.environ.get("BUILD_DOCS", "false").lower() == "true"
+        
+        if should_build:
+            # Check if node_modules exists, if not install dependencies
+            node_modules_path = os.path.join(docusaurus_path, 'node_modules')
+            if not os.path.exists(node_modules_path):
+                print("Installing Docusaurus dependencies...")
+                import subprocess
+                subprocess.run(['npm', 'install'], cwd=docusaurus_path, check=True)
+                print("Dependencies installed successfully")
+            
+            # Build the documentation
+            print("Building Docusaurus documentation...")
             import subprocess
-            subprocess.run(['npm', 'install'], cwd=docusaurus_path, check=True)
-            print("Dependencies installed successfully")
+            subprocess.run(['npm', 'run', 'build'], cwd=docusaurus_path, check=True)
+            print("Documentation built successfully")
         
-        # Build the documentation
-        print("Building Docusaurus documentation...")
-        import subprocess
-        subprocess.run(['npm', 'run', 'build'], cwd=docusaurus_path, check=True)
-        print("Documentation built successfully")
-        
-        # Mount the built documentation
+        # Mount the built documentation if it exists
         if os.path.exists(docusaurus_build_path):
             app.mount("/documentation", StaticFiles(directory=docusaurus_build_path, html=True), name="documentation")
             print(f"Documentation mounted at /documentation from {docusaurus_build_path}")
         else:
-            print(f"Build directory not found at {docusaurus_build_path}")
+            print(f"Documentation build not found at {docusaurus_build_path}")
             
     except subprocess.CalledProcessError as e:
         print(f"Error building documentation: {e}")
@@ -555,17 +559,9 @@ def admin_disapprove_grant(user_id: str = Body(...), grant_id: str = Body(...)):
             else:
                 return {'success': False, 'message': 'Grant ID not found for user.'}
         else:
-            return {'success': False, 'message': 'User not found.'}
+                            return {'success': False, 'message': 'User not found.'}
 
 
-
-
-
-
-
-
-
-
-
-
-
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
