@@ -361,7 +361,7 @@ def record(form:rec):
         with shelve.open('consents/consents') as cts:
             form = form.__dict__
 
-            form['birthday'] = timestamp()
+            form['timestamp'] = timestamp()
             cts[ids] = form
 
         db[user.id_number] = user
@@ -401,7 +401,7 @@ def record_pay(form:payment):
             form = form.__dict__
 
 
-            form['birthday'] = timestamp()
+            form['timestamp'] = timestamp()
             cts[ids] = form
 
 
@@ -479,8 +479,10 @@ def track_application_status(id:str):
 
             while (t+gr['machine_time']) < time.time():
                 t += 604800
+            print(gr)
+            print('='*100)
 
-            grants_names.append({'grant':grant, 'application_status': True, 'approved': gr['birthday'],'nextPayment':fixtime(gr['machine_time']+t),'application id':ids, 'description':grants[grant][4]})
+            grants_names.append({'grant':grant, 'application_status': True, 'approved': gr['submission date'],'nextPayment':fixtime(gr['machine_time']+t),'application id':ids, 'description':grants[grant][4]})
 
         return {'grants':grants_names}
 class user_put(BaseModel):
