@@ -14,27 +14,18 @@ import time
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
 # Mount documentation if it exists
-docs_path = os.path.join(os.path.dirname(__file__), "..", "my-website", "build")
-print(f"Looking for documentation at: {docs_path}")
-print(f"Directory exists: {os.path.exists(docs_path)}")
+docusaurus_build_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../my-website/build'))
+print(f"Looking for Docusaurus build at: {docusaurus_build_path}")
+print(f"Directory exists: {os.path.exists(docusaurus_build_path)}")
 
-if os.path.exists(docs_path):
+if os.path.exists(docusaurus_build_path):
     try:
-        app.mount("/documentation", StaticFiles(directory=docs_path), name="documentation")
-        print(f"Documentation mounted at /documentation from {docs_path}")
+        app.mount("/documentation", StaticFiles(directory=docusaurus_build_path, html=True), name="documentation")
+        print(f"Documentation mounted at /documentation from {docusaurus_build_path}")
     except Exception as e:
         print(f"Error mounting documentation: {e}")
 else:
-    print(f"Documentation not found at {docs_path}")
-    # Try alternative path
-    alt_path = os.path.join(os.getcwd(), "..", "my-website", "build")
-    print(f"Trying alternative path: {alt_path}")
-    if os.path.exists(alt_path):
-        try:
-            app.mount("/documentation", StaticFiles(directory=alt_path), name="documentation")
-            print(f"Documentation mounted at /documentation from {alt_path}")
-        except Exception as e:
-            print(f"Error mounting documentation: {e}")
+    print(f"Docusaurus build not found at {docusaurus_build_path}")
 
 
 def timestamp():
