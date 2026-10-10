@@ -123,7 +123,22 @@ class Person:
         self.identifications = []
         self.grant_ids = []
         self.file_ids = []
+DEMO_ID = 'college'
+DEMO_USERNAME = 'college demo'
+DEMO_PASSWORD = 'college'
 
+def seed_demo_account():
+    with shelve.open('people/people') as db:
+        if DEMO_ID not in db:
+            person = Person(DEMO_ID, DEMO_USERNAME, '1990-01-01')
+            person.income_bracket = 2
+            person.citizenship_status = True
+            db[DEMO_ID] = person
+    with shelve.open('logins/logins') as logins:
+        if DEMO_USERNAME not in logins:
+            logins[DEMO_USERNAME] = [DEMO_ID, DEMO_PASSWORD]
+
+seed_demo_account()
 
 
 
