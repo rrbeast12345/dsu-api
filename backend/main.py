@@ -123,7 +123,7 @@ class Person:
         self.identifications = []
         self.grant_ids = []
         self.file_ids = []
-DEMO_ID = 'college'
+DEMO_ID = '35325'
 DEMO_USERNAME = 'college demo'
 DEMO_PASSWORD = 'college'
 
