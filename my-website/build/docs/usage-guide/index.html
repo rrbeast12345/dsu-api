@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en" dir="ltr" class="docs-wrapper plugin-docs plugin-id-default docs-version-current docs-doc-page docs-doc-id-usage-guide" data-has-hydrated="false">
+<head>
+<meta charset="UTF-8">
+<meta name="generator" content="Docusaurus v3.8.1">
+<title data-rh="true">Usage Guide | DSU API Documentation</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="http://127.0.0.1:8000/documentation/img/docusaurus-social-card.jpg"><meta data-rh="true" name="twitter:image" content="http://127.0.0.1:8000/documentation/img/docusaurus-social-card.jpg"><meta data-rh="true" property="og:url" content="http://127.0.0.1:8000/documentation/docs/usage-guide"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Usage Guide | DSU API Documentation"><meta data-rh="true" name="description" content="This guide provides step-by-step instructions for using the DSU API system, both for citizens applying for grants and administrators managing applications."><meta data-rh="true" property="og:description" content="This guide provides step-by-step instructions for using the DSU API system, both for citizens applying for grants and administrators managing applications."><link data-rh="true" rel="icon" href="/documentation/img/favicon.ico"><link data-rh="true" rel="canonical" href="http://127.0.0.1:8000/documentation/docs/usage-guide"><link data-rh="true" rel="alternate" href="http://127.0.0.1:8000/documentation/docs/usage-guide" hreflang="en"><link data-rh="true" rel="alternate" href="http://127.0.0.1:8000/documentation/docs/usage-guide" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Usage Guide","item":"http://127.0.0.1:8000/documentation/docs/usage-guide"}]}</script><link rel="stylesheet" href="/documentation/assets/css/styles.5caa677a.css">
+<script src="/documentation/assets/js/runtime~main.5e883508.js" defer="defer"></script>
+<script src="/documentation/assets/js/main.877587ef.js" defer="defer"></script>
+</head>
+<body class="navigation-with-keyboard">
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><defs>
+<symbol id="theme-svg-external-link" viewBox="0 0 24 24"><path fill="currentColor" d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></symbol>
+</defs></svg>
+<script>!function(){var t="light";var e=function(){try{return new URLSearchParams(window.location.search).get("docusaurus-theme")}catch(t){}}()||function(){try{return window.localStorage.getItem("theme")}catch(t){}}();document.documentElement.setAttribute("data-theme",e||t),document.documentElement.setAttribute("data-theme-choice",e||t)}(),function(){try{const c=new URLSearchParams(window.location.search).entries();for(var[t,e]of c)if(t.startsWith("docusaurus-data-")){var a=t.replace("docusaurus-data-","data-");document.documentElement.setAttribute(a,e)}}catch(t){}}()</script><div id="__docusaurus"><link rel="preload" as="image" href="/documentation/img/logo.svg"><div role="region" aria-label="Skip to main content"><a class="skipToContent_fXgn" href="#__docusaurus_skipToContent_fallback">Skip to main content</a></div><nav aria-label="Main" class="theme-layout-navbar navbar navbar--fixed-top"><div class="navbar__inner"><div class="theme-layout-navbar-left navbar__items"><button aria-label="Toggle navigation bar" aria-expanded="false" class="navbar__toggle clean-btn" type="button"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path></svg></button><a class="navbar__brand" href="/documentation/"><div class="navbar__logo"><img src="/documentation/img/logo.svg" alt="DSU API Logo" class="themedComponent_mlkZ themedComponent--light_NVdE"><img src="/documentation/img/logo.svg" alt="DSU API Logo" class="themedComponent_mlkZ themedComponent--dark_xIcU"></div><b class="navbar__title text--truncate">DSU API</b></a><a aria-current="page" class="navbar__item navbar__link navbar__link--active" href="/documentation/docs/intro">Documentation</a></div><div class="theme-layout-navbar-right navbar__items navbar__items--right"><a href="https://github.com/facebook/docusaurus" target="_blank" rel="noopener noreferrer" class="navbar__item navbar__link">GitHub<svg width="13.5" height="13.5" aria-hidden="true" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a><div class="toggle_vylO colorModeToggle_DEke"><button class="clean-btn toggleButton_gllP toggleButtonDisabled_aARS" type="button" disabled="" title="system mode" aria-label="Switch between dark and light mode (currently system mode)"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP lightToggleIcon_pyhR"><path fill="currentColor" d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5 S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0c0.55,0,1-0.45,1-1 s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1C11.45,19,11,19.45,11,20z M5.99,4.58c-0.39-0.39-1.03-0.39-1.41,0 c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95 c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0c0.39-0.39,0.39-1.03,0-1.41 L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41 s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06 c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP darkToggleIcon_wfgR"><path fill="currentColor" d="M9.37,5.51C9.19,6.15,9.1,6.82,9.1,7.5c0,4.08,3.32,7.4,7.4,7.4c0.68,0,1.35-0.09,1.99-0.27C17.45,17.19,14.93,19,12,19 c-3.86,0-7-3.14-7-7C5,9.07,6.81,6.55,9.37,5.51z M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36 c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP systemToggleIcon_QzmC"><path fill="currentColor" d="m12 21c4.971 0 9-4.029 9-9s-4.029-9-9-9-9 4.029-9 9 4.029 9 9 9zm4.95-13.95c1.313 1.313 2.05 3.093 2.05 4.95s-0.738 3.637-2.05 4.95c-1.313 1.313-3.093 2.05-4.95 2.05v-14c1.857 0 3.637 0.737 4.95 2.05z"></path></svg></button></div><div class="navbarSearchContainer_Bca1"></div></div></div><div role="presentation" class="navbar-sidebar__backdrop"></div></nav><div id="__docusaurus_skipToContent_fallback" class="theme-layout-main main-wrapper mainWrapper_z2l0"><div class="docsWrapper_hBAB"><button aria-label="Scroll back to top" class="clean-btn theme-back-to-top-button backToTopButton_sjWU" type="button"></button><div class="docRoot_UBD9"><aside class="theme-doc-sidebar-container docSidebarContainer_YfHR"><div class="sidebarViewport_aRkj"><div class="sidebar_njMd"><nav aria-label="Docs sidebar" class="menu thin-scrollbar menu_SIkG"><ul class="theme-doc-sidebar-menu menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/documentation/docs/intro">DSU API - Digital Services Unit Grant Management System</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link menu__link--active" aria-current="page" href="/documentation/docs/usage-guide">Usage Guide</a></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/documentation/docs/api/endpoints">API Reference</a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/documentation/docs/database/structure">Database</a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/documentation/docs/frontend/pages">Frontend</a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/documentation/docs/security/overview">Security</a></div></li></ul></nav></div></div></aside><main class="docMainContainer_TBSr"><div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><nav class="theme-doc-breadcrumbs breadcrumbsContainer_Z_bl" aria-label="Breadcrumbs"><ul class="breadcrumbs"><li class="breadcrumbs__item"><a aria-label="Home page" class="breadcrumbs__link" href="/documentation/"><svg viewBox="0 0 24 24" class="breadcrumbHomeIcon_YNFT"><path d="M10 19v-5h4v5c0 .55.45 1 1 1h3c.55 0 1-.45 1-1v-7h1.7c.46 0 .68-.57.33-.87L12.67 3.6c-.38-.34-.96-.34-1.34 0l-8.36 7.53c-.34.3-.13.87.33.87H5v7c0 .55.45 1 1 1h3c.55 0 1-.45 1-1z" fill="currentColor"></path></svg></a></li><li class="breadcrumbs__item breadcrumbs__item--active"><span class="breadcrumbs__link">Usage Guide</span></li></ul></nav><div class="tocCollapsible_ETCw theme-doc-toc-mobile tocMobile_ITEo"><button type="button" class="clean-btn tocCollapsibleButton_TO0P">On this page</button></div><div class="theme-doc-markdown markdown"><header><h1>Usage Guide</h1></header>
+<p>This guide provides step-by-step instructions for using the DSU API system, both for citizens applying for grants and administrators managing applications.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="for-citizens">For Citizens<a href="#for-citizens" class="hash-link" aria-label="Direct link to For Citizens" title="Direct link to For Citizens">​</a></h2>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="1-account-creation">1. Account Creation<a href="#1-account-creation" class="hash-link" aria-label="Direct link to 1. Account Creation" title="Direct link to 1. Account Creation">​</a></h3>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="step-1-access-registration-page">Step 1: Access Registration Page<a href="#step-1-access-registration-page" class="hash-link" aria-label="Direct link to Step 1: Access Registration Page" title="Direct link to Step 1: Access Registration Page">​</a></h4>
+<ul>
+<li>Navigate to <code>create account.html</code></li>
+<li>Ensure you have your ID number ready</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="step-2-complete-registration-form">Step 2: Complete Registration Form<a href="#step-2-complete-registration-form" class="hash-link" aria-label="Direct link to Step 2: Complete Registration Form" title="Direct link to Step 2: Complete Registration Form">​</a></h4>
+<ul>
+<li><strong>ID Number</strong>: Enter your government-issued ID number (minimum 5 digits)</li>
+<li><strong>Full Name</strong>: Enter your complete legal name</li>
+<li><strong>Date of Birth</strong>: Select your date of birth using the date picker</li>
+<li><strong>Password</strong>: Create a strong password (minimum 8 characters)</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="step-3-submit-registration">Step 3: Submit Registration<a href="#step-3-submit-registration" class="hash-link" aria-label="Direct link to Step 3: Submit Registration" title="Direct link to Step 3: Submit Registration">​</a></h4>
+<ul>
+<li>Click &quot;Create Account&quot; button</li>
+<li>If successful, you&#x27;ll be redirected to the profile page</li>
+<li>If username already exists, you&#x27;ll need to choose a different name</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="2-profile-setup">2. Profile Setup<a href="#2-profile-setup" class="hash-link" aria-label="Direct link to 2. Profile Setup" title="Direct link to 2. Profile Setup">​</a></h3>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="step-1-complete-profile-information">Step 1: Complete Profile Information<a href="#step-1-complete-profile-information" class="hash-link" aria-label="Direct link to Step 1: Complete Profile Information" title="Direct link to Step 1: Complete Profile Information">​</a></h4>
+<ul>
+<li>
+<p><strong>Income Bracket</strong>: Select your income level (1-5)</p>
+<ul>
+<li>1: Lowest income level</li>
+<li>2: Low income level</li>
+<li>3: Medium income level</li>
+<li>4: High income level</li>
+<li>5: Highest income level</li>
+</ul>
+</li>
+<li>
+<p><strong>Citizenship Status</strong>: Indicate if you are a citizen</p>
+</li>
+<li>
+<p><strong>Age</strong>: Automatically calculated from date of birth</p>
+</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="step-2-save-profile">Step 2: Save Profile<a href="#step-2-save-profile" class="hash-link" aria-label="Direct link to Step 2: Save Profile" title="Direct link to Step 2: Save Profile">​</a></h4>
+<ul>
+<li>Click &quot;Update Profile&quot; to save changes</li>
+<li>Profile completion is required for grant eligibility</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="3-document-upload">3. Document Upload<a href="#3-document-upload" class="hash-link" aria-label="Direct link to 3. Document Upload" title="Direct link to 3. Document Upload">​</a></h3>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="step-1-access-document-upload">Step 1: Access Document Upload<a href="#step-1-access-document-upload" class="hash-link" aria-label="Direct link to Step 1: Access Document Upload" title="Direct link to Step 1: Access Document Upload">​</a></h4>
+<ul>
+<li>Navigate to <code>add docs.html</code></li>
+<li>Ensure you have digital copies of required documents</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="step-2-upload-documents">Step 2: Upload Documents<a href="#step-2-upload-documents" class="hash-link" aria-label="Direct link to Step 2: Upload Documents" title="Direct link to Step 2: Upload Documents">​</a></h4>
+<ul>
+<li><strong>Document Type</strong>: Select the type of document (ID, Business Statement, etc.)</li>
+<li><strong>File Selection</strong>: Choose the file from your device</li>
+<li><strong>Upload</strong>: Click &quot;Upload Document&quot; button</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="supported-document-types">Supported Document Types:<a href="#supported-document-types" class="hash-link" aria-label="Direct link to Supported Document Types:" title="Direct link to Supported Document Types:">​</a></h4>
+<ul>
+<li><strong>ID</strong>: Government-issued identification</li>
+<li><strong>Business Statement</strong>: Business registration or plan</li>
+<li><strong>Proof of Previous Employment</strong>: Employment history</li>
+<li><strong>Bank Statement</strong>: Financial institution statement</li>
+<li><strong>Grades</strong>: Academic transcripts</li>
+<li><strong>Senior Certificate</strong>: High school completion certificate</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="4-grant-application">4. Grant Application<a href="#4-grant-application" class="hash-link" aria-label="Direct link to 4. Grant Application" title="Direct link to 4. Grant Application">​</a></h3>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="step-1-check-eligibility">Step 1: Check Eligibility<a href="#step-1-check-eligibility" class="hash-link" aria-label="Direct link to Step 1: Check Eligibility" title="Direct link to Step 1: Check Eligibility">​</a></h4>
+<ul>
+<li>Navigate to <code>grant programs.html</code></li>
+<li>System automatically checks your eligibility based on profile</li>
+<li>Only eligible grants will be displayed</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="step-2-review-grant-details">Step 2: Review Grant Details<a href="#step-2-review-grant-details" class="hash-link" aria-label="Direct link to Step 2: Review Grant Details" title="Direct link to Step 2: Review Grant Details">​</a></h4>
+<p>Each grant shows:</p>
+<ul>
+<li><strong>Grant Name</strong>: Type of grant</li>
+<li><strong>Amount</strong>: Grant value</li>
+<li><strong>Requirements</strong>: Documents needed</li>
+<li><strong>Description</strong>: Purpose and details</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="step-3-apply-for-grants">Step 3: Apply for Grants<a href="#step-3-apply-for-grants" class="hash-link" aria-label="Direct link to Step 3: Apply for Grants" title="Direct link to Step 3: Apply for Grants">​</a></h4>
+<ul>
+<li>Click &quot;Apply&quot; button for desired grants</li>
+<li>Confirm application submission</li>
+<li>Multiple grants can be applied for simultaneously</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="5-track-applications">5. Track Applications<a href="#5-track-applications" class="hash-link" aria-label="Direct link to 5. Track Applications" title="Direct link to 5. Track Applications">​</a></h3>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="step-1-monitor-status">Step 1: Monitor Status<a href="#step-1-monitor-status" class="hash-link" aria-label="Direct link to Step 1: Monitor Status" title="Direct link to Step 1: Monitor Status">​</a></h4>
+<ul>
+<li>Navigate to <code>track grants.html</code></li>
+<li>View all your applications and their current status</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="status-types">Status Types:<a href="#status-types" class="hash-link" aria-label="Direct link to Status Types:" title="Direct link to Status Types:">​</a></h4>
+<ul>
+<li><strong>Pending</strong>: Application under review</li>
+<li><strong>Approved</strong>: Grant approved and processing</li>
+<li><strong>Disapproved</strong>: Application rejected</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="step-2-check-details">Step 2: Check Details<a href="#step-2-check-details" class="hash-link" aria-label="Direct link to Step 2: Check Details" title="Direct link to Step 2: Check Details">​</a></h4>
+<ul>
+<li>Click on applications to view details</li>
+<li>Monitor for status updates</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="6-consent-management">6. Consent Management<a href="#6-consent-management" class="hash-link" aria-label="Direct link to 6. Consent Management" title="Direct link to 6. Consent Management">​</a></h3>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="step-1-access-consent-page">Step 1: Access Consent Page<a href="#step-1-access-consent-page" class="hash-link" aria-label="Direct link to Step 1: Access Consent Page" title="Direct link to Step 1: Access Consent Page">​</a></h4>
+<ul>
+<li>Navigate to <code>consent.html</code></li>
+<li>Review available consent scopes</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="step-2-manage-consents">Step 2: Manage Consents<a href="#step-2-manage-consents" class="hash-link" aria-label="Direct link to Step 2: Manage Consents" title="Direct link to Step 2: Manage Consents">​</a></h4>
+<ul>
+<li><strong>Data Sharing</strong>: Consent to share data with government agencies</li>
+<li><strong>Marketing Communications</strong>: Receive promotional materials</li>
+<li><strong>Third Party Access</strong>: Allow third-party service providers</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="step-3-update-preferences">Step 3: Update Preferences<a href="#step-3-update-preferences" class="hash-link" aria-label="Direct link to Step 3: Update Preferences" title="Direct link to Step 3: Update Preferences">​</a></h4>
+<ul>
+<li>Check/uncheck consent options</li>
+<li>Click &quot;Update Consents&quot; to save changes</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="7-payment-setup">7. Payment Setup<a href="#7-payment-setup" class="hash-link" aria-label="Direct link to 7. Payment Setup" title="Direct link to 7. Payment Setup">​</a></h3>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="step-1-access-payment-page">Step 1: Access Payment Page<a href="#step-1-access-payment-page" class="hash-link" aria-label="Direct link to Step 1: Access Payment Page" title="Direct link to Step 1: Access Payment Page">​</a></h4>
+<ul>
+<li>Navigate to <code>payment.html</code></li>
+<li>Prepare your payment method information</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="step-2-add-payment-method">Step 2: Add Payment Method<a href="#step-2-add-payment-method" class="hash-link" aria-label="Direct link to Step 2: Add Payment Method" title="Direct link to Step 2: Add Payment Method">​</a></h4>
+<ul>
+<li><strong>Wallet Provider</strong>: Select your payment provider</li>
+<li><strong>Account Number</strong>: Enter your account/wallet number</li>
+<li><strong>Save</strong>: Click &quot;Add Payment Method&quot;</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="step-3-manage-payment-methods">Step 3: Manage Payment Methods<a href="#step-3-manage-payment-methods" class="hash-link" aria-label="Direct link to Step 3: Manage Payment Methods" title="Direct link to Step 3: Manage Payment Methods">​</a></h4>
+<ul>
+<li>View existing payment methods</li>
+<li>Add multiple payment options</li>
+<li>Remove outdated payment methods</li>
+</ul>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="for-administrators">For Administrators<a href="#for-administrators" class="hash-link" aria-label="Direct link to For Administrators" title="Direct link to For Administrators">​</a></h2>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="1-access-admin-panel">1. Access Admin Panel<a href="#1-access-admin-panel" class="hash-link" aria-label="Direct link to 1. Access Admin Panel" title="Direct link to 1. Access Admin Panel">​</a></h3>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="step-1-navigate-to-admin-page">Step 1: Navigate to Admin Page<a href="#step-1-navigate-to-admin-page" class="hash-link" aria-label="Direct link to Step 1: Navigate to Admin Page" title="Direct link to Step 1: Navigate to Admin Page">​</a></h4>
+<ul>
+<li>Access <code>admin review.html</code></li>
+<li>Enter admin password when prompted</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="step-2-authentication">Step 2: Authentication<a href="#step-2-authentication" class="hash-link" aria-label="Direct link to Step 2: Authentication" title="Direct link to Step 2: Authentication">​</a></h4>
+<ul>
+<li>Use the configured admin password</li>
+<li>Session will be maintained for admin functions</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="2-review-applications">2. Review Applications<a href="#2-review-applications" class="hash-link" aria-label="Direct link to 2. Review Applications" title="Direct link to 2. Review Applications">​</a></h3>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="step-1-view-all-applications">Step 1: View All Applications<a href="#step-1-view-all-applications" class="hash-link" aria-label="Direct link to Step 1: View All Applications" title="Direct link to Step 1: View All Applications">​</a></h4>
+<ul>
+<li>Admin panel displays all user applications</li>
+<li>Applications are organized by user and grant type</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="step-2-filter-and-search">Step 2: Filter and Search<a href="#step-2-filter-and-search" class="hash-link" aria-label="Direct link to Step 2: Filter and Search" title="Direct link to Step 2: Filter and Search">​</a></h4>
+<ul>
+<li>Use search functionality to find specific users</li>
+<li>Filter by application status</li>
+<li>Sort by application date</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="3-process-applications">3. Process Applications<a href="#3-process-applications" class="hash-link" aria-label="Direct link to 3. Process Applications" title="Direct link to 3. Process Applications">​</a></h3>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="step-1-review-application-details">Step 1: Review Application Details<a href="#step-1-review-application-details" class="hash-link" aria-label="Direct link to Step 1: Review Application Details" title="Direct link to Step 1: Review Application Details">​</a></h4>
+<ul>
+<li>Click on applications to view full details</li>
+<li>Check uploaded documents</li>
+<li>Verify user information</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="step-2-make-decisions">Step 2: Make Decisions<a href="#step-2-make-decisions" class="hash-link" aria-label="Direct link to Step 2: Make Decisions" title="Direct link to Step 2: Make Decisions">​</a></h4>
+<ul>
+<li>
+<p><strong>Approve</strong>: Grant the application</p>
+<ul>
+<li>Click &quot;Approve&quot; button</li>
+<li>Application status changes to approved</li>
+<li>User is notified of approval</li>
+</ul>
+</li>
+<li>
+<p><strong>Disapprove</strong>: Reject the application</p>
+<ul>
+<li>Click &quot;Disapprove&quot; button</li>
+<li>Application status changes to disapproved</li>
+<li>User is notified of rejection</li>
+</ul>
+</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="step-3-verify-users">Step 3: Verify Users<a href="#step-3-verify-users" class="hash-link" aria-label="Direct link to Step 3: Verify Users" title="Direct link to Step 3: Verify Users">​</a></h4>
+<ul>
+<li>Access user verification functions</li>
+<li>Mark users as verified when identity is confirmed</li>
+<li>Update user status in the system</li>
+</ul>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="system-navigation">System Navigation<a href="#system-navigation" class="hash-link" aria-label="Direct link to System Navigation" title="Direct link to System Navigation">​</a></h2>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="user-dashboard-flow">User Dashboard Flow<a href="#user-dashboard-flow" class="hash-link" aria-label="Direct link to User Dashboard Flow" title="Direct link to User Dashboard Flow">​</a></h3>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">Sign In → Profile → Grant Programs → Track Grants</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    ↓</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">Add Docs ← Consent ← Payment</span><br></span></code></pre></div></div>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="admin-dashboard-flow">Admin Dashboard Flow<a href="#admin-dashboard-flow" class="hash-link" aria-label="Direct link to Admin Dashboard Flow" title="Direct link to Admin Dashboard Flow">​</a></h3>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">Admin Login → Review Applications → Process Decisions</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    ↓</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">User Verification ← Application Management</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="troubleshooting">Troubleshooting<a href="#troubleshooting" class="hash-link" aria-label="Direct link to Troubleshooting" title="Direct link to Troubleshooting">​</a></h2>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="common-issues">Common Issues<a href="#common-issues" class="hash-link" aria-label="Direct link to Common Issues" title="Direct link to Common Issues">​</a></h3>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="registration-problems">Registration Problems<a href="#registration-problems" class="hash-link" aria-label="Direct link to Registration Problems" title="Direct link to Registration Problems">​</a></h4>
+<ul>
+<li><strong>Username Already Exists</strong>: Choose a different username</li>
+<li><strong>Invalid ID Number</strong>: Ensure ID number is at least 5 digits</li>
+<li><strong>Invalid Date</strong>: Use the date picker for correct format</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="login-issues">Login Issues<a href="#login-issues" class="hash-link" aria-label="Direct link to Login Issues" title="Direct link to Login Issues">​</a></h4>
+<ul>
+<li><strong>Incorrect Password</strong>: Check password spelling and case</li>
+<li><strong>User Not Found</strong>: Verify username is correct</li>
+<li><strong>Session Expired</strong>: Re-login to continue</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="document-upload-problems">Document Upload Problems<a href="#document-upload-problems" class="hash-link" aria-label="Direct link to Document Upload Problems" title="Direct link to Document Upload Problems">​</a></h4>
+<ul>
+<li><strong>File Too Large</strong>: Compress or resize images</li>
+<li><strong>Invalid File Type</strong>: Use supported image formats (JPG, PNG)</li>
+<li><strong>Upload Failed</strong>: Check internet connection and try again</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="grant-application-issues">Grant Application Issues<a href="#grant-application-issues" class="hash-link" aria-label="Direct link to Grant Application Issues" title="Direct link to Grant Application Issues">​</a></h4>
+<ul>
+<li><strong>No Eligible Grants</strong>: Complete profile information first</li>
+<li><strong>Application Failed</strong>: Ensure all required documents are uploaded</li>
+<li><strong>Duplicate Application</strong>: Check if already applied for the grant</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="error-messages">Error Messages<a href="#error-messages" class="hash-link" aria-label="Direct link to Error Messages" title="Direct link to Error Messages">​</a></h3>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="authentication-errors">Authentication Errors<a href="#authentication-errors" class="hash-link" aria-label="Direct link to Authentication Errors" title="Direct link to Authentication Errors">​</a></h4>
+<ul>
+<li><code>&quot;User not found&quot;</code>: Username doesn&#x27;t exist</li>
+<li><code>&quot;Invalid password&quot;</code>: Password is incorrect</li>
+<li><code>&quot;Session expired&quot;</code>: Need to re-authenticate</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="application-errors">Application Errors<a href="#application-errors" class="hash-link" aria-label="Direct link to Application Errors" title="Direct link to Application Errors">​</a></h4>
+<ul>
+<li><code>&quot;User not eligible&quot;</code>: Profile incomplete or requirements not met</li>
+<li><code>&quot;Already applied&quot;</code>: Grant application already submitted</li>
+<li><code>&quot;Documents missing&quot;</code>: Required documents not uploaded</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="system-errors">System Errors<a href="#system-errors" class="hash-link" aria-label="Direct link to System Errors" title="Direct link to System Errors">​</a></h4>
+<ul>
+<li><code>&quot;Server error&quot;</code>: Contact system administrator</li>
+<li><code>&quot;Network error&quot;</code>: Check internet connection</li>
+<li><code>&quot;Database error&quot;</code>: System maintenance required</li>
+</ul>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="best-practices">Best Practices<a href="#best-practices" class="hash-link" aria-label="Direct link to Best Practices" title="Direct link to Best Practices">​</a></h2>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="for-citizens-1">For Citizens<a href="#for-citizens-1" class="hash-link" aria-label="Direct link to For Citizens" title="Direct link to For Citizens">​</a></h3>
+<ol>
+<li><strong>Complete Profile</strong>: Fill all required information for eligibility</li>
+<li><strong>Upload Documents</strong>: Provide clear, legible document images</li>
+<li><strong>Monitor Status</strong>: Regularly check application progress</li>
+<li><strong>Keep Information Updated</strong>: Update contact and payment information</li>
+<li><strong>Read Requirements</strong>: Understand grant requirements before applying</li>
+</ol>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="for-administrators-1">For Administrators<a href="#for-administrators-1" class="hash-link" aria-label="Direct link to For Administrators" title="Direct link to For Administrators">​</a></h3>
+<ol>
+<li><strong>Regular Reviews</strong>: Process applications promptly</li>
+<li><strong>Document Verification</strong>: Thoroughly review uploaded documents</li>
+<li><strong>Consistent Decisions</strong>: Apply criteria consistently</li>
+<li><strong>User Communication</strong>: Provide clear feedback on decisions</li>
+<li><strong>System Monitoring</strong>: Monitor for system issues or errors</li>
+</ol>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="support-and-contact">Support and Contact<a href="#support-and-contact" class="hash-link" aria-label="Direct link to Support and Contact" title="Direct link to Support and Contact">​</a></h2>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="technical-support">Technical Support<a href="#technical-support" class="hash-link" aria-label="Direct link to Technical Support" title="Direct link to Technical Support">​</a></h3>
+<ul>
+<li><strong>Email</strong>: <a href="mailto:support@dsu-api.com" target="_blank" rel="noopener noreferrer">support@dsu-api.com</a></li>
+<li><strong>Phone</strong>: +1-555-0123</li>
+<li><strong>Hours</strong>: Monday-Friday, 9 AM - 5 PM</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="user-guides">User Guides<a href="#user-guides" class="hash-link" aria-label="Direct link to User Guides" title="Direct link to User Guides">​</a></h3>
+<ul>
+<li><strong>Video Tutorials</strong>: Available on the help page</li>
+<li><strong>FAQ</strong>: Common questions and answers</li>
+<li><strong>Live Chat</strong>: Available during business hours</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="system-status">System Status<a href="#system-status" class="hash-link" aria-label="Direct link to System Status" title="Direct link to System Status">​</a></h3>
+<ul>
+<li><strong>Status Page</strong>: <a href="https://dsu-api.com/status" target="_blank" rel="noopener noreferrer">https://dsu-api.com/status</a></li>
+<li><strong>Maintenance Notices</strong>: Posted 24 hours in advance</li>
+<li><strong>Emergency Updates</strong>: Real-time notifications</li>
+</ul></div><footer class="theme-doc-footer docusaurus-mt-lg"><div class="row margin-top--sm theme-doc-footer-edit-meta-row"><div class="col"><a href="https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/docs/usage-guide.md" target="_blank" rel="noopener noreferrer" class="theme-edit-this-page"><svg fill="currentColor" height="20" width="20" viewBox="0 0 40 40" class="iconEdit_Z9Sw" aria-hidden="true"><g><path d="m34.5 11.7l-3 3.1-6.3-6.3 3.1-3q0.5-0.5 1.2-0.5t1.1 0.5l3.9 3.9q0.5 0.4 0.5 1.1t-0.5 1.2z m-29.5 17.1l18.4-18.5 6.3 6.3-18.4 18.4h-6.3v-6.2z"></path></g></svg>Edit this page</a></div><div class="col lastUpdated_JAkA"></div></div></footer></article><nav class="docusaurus-mt-lg pagination-nav" aria-label="Docs pages"><a class="pagination-nav__link pagination-nav__link--prev" href="/documentation/docs/intro"><div class="pagination-nav__sublabel">Previous</div><div class="pagination-nav__label">DSU API - Digital Services Unit Grant Management System</div></a><a class="pagination-nav__link pagination-nav__link--next" href="/documentation/docs/api/endpoints"><div class="pagination-nav__sublabel">Next</div><div class="pagination-nav__label">API Endpoints Reference</div></a></nav></div></div><div class="col col--3"><div class="tableOfContents_bqdL thin-scrollbar theme-doc-toc-desktop"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#for-citizens" class="table-of-contents__link toc-highlight">For Citizens</a><ul><li><a href="#1-account-creation" class="table-of-contents__link toc-highlight">1. Account Creation</a></li><li><a href="#2-profile-setup" class="table-of-contents__link toc-highlight">2. Profile Setup</a></li><li><a href="#3-document-upload" class="table-of-contents__link toc-highlight">3. Document Upload</a></li><li><a href="#4-grant-application" class="table-of-contents__link toc-highlight">4. Grant Application</a></li><li><a href="#5-track-applications" class="table-of-contents__link toc-highlight">5. Track Applications</a></li><li><a href="#6-consent-management" class="table-of-contents__link toc-highlight">6. Consent Management</a></li><li><a href="#7-payment-setup" class="table-of-contents__link toc-highlight">7. Payment Setup</a></li></ul></li><li><a href="#for-administrators" class="table-of-contents__link toc-highlight">For Administrators</a><ul><li><a href="#1-access-admin-panel" class="table-of-contents__link toc-highlight">1. Access Admin Panel</a></li><li><a href="#2-review-applications" class="table-of-contents__link toc-highlight">2. Review Applications</a></li><li><a href="#3-process-applications" class="table-of-contents__link toc-highlight">3. Process Applications</a></li></ul></li><li><a href="#system-navigation" class="table-of-contents__link toc-highlight">System Navigation</a><ul><li><a href="#user-dashboard-flow" class="table-of-contents__link toc-highlight">User Dashboard Flow</a></li><li><a href="#admin-dashboard-flow" class="table-of-contents__link toc-highlight">Admin Dashboard Flow</a></li></ul></li><li><a href="#troubleshooting" class="table-of-contents__link toc-highlight">Troubleshooting</a><ul><li><a href="#common-issues" class="table-of-contents__link toc-highlight">Common Issues</a></li><li><a href="#error-messages" class="table-of-contents__link toc-highlight">Error Messages</a></li></ul></li><li><a href="#best-practices" class="table-of-contents__link toc-highlight">Best Practices</a><ul><li><a href="#for-citizens-1" class="table-of-contents__link toc-highlight">For Citizens</a></li><li><a href="#for-administrators-1" class="table-of-contents__link toc-highlight">For Administrators</a></li></ul></li><li><a href="#support-and-contact" class="table-of-contents__link toc-highlight">Support and Contact</a><ul><li><a href="#technical-support" class="table-of-contents__link toc-highlight">Technical Support</a></li><li><a href="#user-guides" class="table-of-contents__link toc-highlight">User Guides</a></li><li><a href="#system-status" class="table-of-contents__link toc-highlight">System Status</a></li></ul></li></ul></div></div></div></div></main></div></div></div><footer class="theme-layout-footer footer footer--dark"><div class="container container-fluid"><div class="row footer__links"><div class="theme-layout-footer-column col footer__col"><div class="footer__title">Documentation</div><ul class="footer__items clean-list"><li class="footer__item"><a class="footer__link-item" href="/documentation/docs/intro">Getting Started</a></li><li class="footer__item"><a class="footer__link-item" href="/documentation/docs/api/endpoints">API Reference</a></li></ul></div><div class="theme-layout-footer-column col footer__col"><div class="footer__title">Community</div><ul class="footer__items clean-list"><li class="footer__item"><a href="https://stackoverflow.com/questions/tagged/docusaurus" target="_blank" rel="noopener noreferrer" class="footer__link-item">Stack Overflow<svg width="13.5" height="13.5" aria-hidden="true" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://discordapp.com/invite/docusaurus" target="_blank" rel="noopener noreferrer" class="footer__link-item">Discord<svg width="13.5" height="13.5" aria-hidden="true" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://x.com/docusaurus" target="_blank" rel="noopener noreferrer" class="footer__link-item">X<svg width="13.5" height="13.5" aria-hidden="true" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div><div class="theme-layout-footer-column col footer__col"><div class="footer__title">More</div><ul class="footer__items clean-list"><li class="footer__item"><a href="https://github.com/facebook/docusaurus" target="_blank" rel="noopener noreferrer" class="footer__link-item">GitHub<svg width="13.5" height="13.5" aria-hidden="true" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div></div><div class="footer__bottom text--center"><div class="footer__copyright">Copyright © 2025 DSU API. Built with Docusaurus.</div></div></div></footer></div>
+</body>
+</html>

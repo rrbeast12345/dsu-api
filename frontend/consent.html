@@ -84,6 +84,8 @@
                 userConsentedScopes = [];
                 if (response.ok) {
                     const data = await response.json();
+                    console.log('here')
+                    console.log(data);
                     userConsentedScopes = data.scope;
                 }
                 renderScopesCheckboxes();

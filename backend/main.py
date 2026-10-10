@@ -1,7 +1,3 @@
-
-
-
-
 from fastapi import FastAPI, File, UploadFile, Body
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
@@ -10,18 +6,72 @@ import pickle
 from datetime import datetime, timezone
 from fastapi.middleware.cors import CORSMiddleware
 import shutil
-from pathlib import Path
-
-
-
+import os
 
 app = FastAPI()
 import time
 # users = {'231':["231", "Thandi Mkhize", "1976-01-01", True],'341':["341", "oliver gardi", "2008-05-23", False]}
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
-BASE_DIR = Path(__file__).resolve().parent
-app.mount("/frontend", StaticFiles(directory=str(BASE_DIR / "frontend for replit"), html=True), name="frontend for replit")
+# Mount frontend for replit
+frontend_replit_path = os.path.abspath(os.path.join(os.path.dirname(__file__), 'frontend for replit'))
+print(f"Looking for frontend for replit at: {frontend_replit_path}")
+print(f"Directory exists: {os.path.exists(frontend_replit_path)}")
+
+if os.path.exists(frontend_replit_path):
+    try:
+        app.mount("/frontend", StaticFiles(directory=frontend_replit_path, html=True), name="frontend")
+        print(f"Frontend for replit mounted at /frontend from {frontend_replit_path}")
+    except Exception as e:
+        print(f"Error mounting frontend for replit: {e}")
+else:
+    print(f"Frontend for replit not found at {frontend_replit_path}")
+
+# Build and mount documentation
+docusaurus_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'my-website'))
+docusaurus_build_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'my-website', 'build'))
+
+print(f"Looking for Docusaurus project at: {docusaurus_path}")
+print(f"Directory exists: {os.path.exists(docusaurus_path)}")
+
+if os.path.exists(docusaurus_path):
+    try:
+        # Only build documentation in development or if explicitly requested
+        should_build = os.environ.get("BUILD_DOCS", "false").lower() == "true"
+        
+        if should_build:
+            # Check if node_modules exists, if not install dependencies
+            node_modules_path = os.path.join(docusaurus_path, 'node_modules')
+            if not os.path.exists(node_modules_path):
+                print("Installing Docusaurus dependencies...")
+                import subprocess
+                subprocess.run(['npm', 'install'], cwd=docusaurus_path, check=True)
+                print("Dependencies installed successfully")
+            
+            # Build the documentation
+            print("Building Docusaurus documentation...")
+            import subprocess
+            subprocess.run(['npm', 'run', 'build'], cwd=docusaurus_path, check=True)
+            print("Documentation built successfully")
+        
+        # Mount the built documentation if it exists
+        if os.path.exists(docusaurus_build_path):
+            app.mount("/documentation", StaticFiles(directory=docusaurus_build_path, html=True), name="documentation")
+            print(f"Documentation mounted at /documentation from {docusaurus_build_path}")
+        else:
+            print(f"Documentation build not found at {docusaurus_build_path}")
+            print("Documentation will not be available at /documentation")
+            
+    except subprocess.CalledProcessError as e:
+        print(f"Error building documentation: {e}")
+        print("Documentation will not be available at /documentation")
+    except Exception as e:
+        print(f"Error mounting documentation: {e}")
+        print("Documentation will not be available at /documentation")
+else:
+    print(f"Docusaurus project not found at {docusaurus_path}")
+    print("Documentation will not be available at /documentation")
+
 
 def timestamp():
     return datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
@@ -82,7 +132,28 @@ class Person:
 
 @app.get("/")
 def read_root():
-    return {"Hello": "World"}
+    return {'success': True}
+
+@app.get("/health")
+def health_check():
+    """Health check endpoint"""
+    docs_available = os.path.exists(docusaurus_build_path)
+    return {
+        "status": "healthy",
+        "documentation": "available" if docs_available else "not_available",
+        "timestamp": timestamp()
+    }
+
+@app.get("/docs")
+def docs_info():
+    """Documentation info endpoint"""
+    docs_available = os.path.exists(docusaurus_build_path)
+    return {
+        "documentation_available": docs_available,
+        "documentation_url": "/documentation" if docs_available else None,
+        "message": "Documentation is available at /documentation" if docs_available else "Documentation is not available. Set BUILD_DOCS=true to build it.",
+        "timestamp": timestamp()
+    }
 
 class login_info(BaseModel):
     username: str
@@ -224,14 +295,11 @@ def apply(id:str, grant:str):
             reqs = approved_grants[grant]
 
             for item in reqs:
-                missing = []
                 if not item in user.identifications:
                     print(user.identifications)
                     print(approved_grants)
                     print(grant)
-                    missing.append(item)
-                if missing:
-                    return  {'success':False, 'message':"you are missing: "+', '.join(missing)}
+                    return  {'success':False, 'message':"you are missing: "+', '.join(reqs)}
 
 
 
@@ -293,7 +361,7 @@ def record(form:rec):
         with shelve.open('consents/consents') as cts:
             form = form.__dict__
 
-            form['birthday'] = timestamp()
+            form['timestamp'] = timestamp()
             cts[ids] = form
 
         db[user.id_number] = user
@@ -333,7 +401,7 @@ def record_pay(form:payment):
             form = form.__dict__
 
 
-            form['birthday'] = timestamp()
+            form['timestamp'] = timestamp()
             cts[ids] = form
 
 
@@ -411,8 +479,10 @@ def track_application_status(id:str):
 
             while (t+gr['machine_time']) < time.time():
                 t += 604800
+            print(gr)
+            print('='*100)
 
-            grants_names.append({'grant':grant, 'application_status': True, 'approved': gr['submission date'],'nextPayment':fixtime(gr['machine_time']+t),'application id':ids, 'description':grants[grant][4], 'admin_approved':gr['approved']})
+            grants_names.append({'grant':grant, 'application_status': True, 'approved': gr['submission date'],'nextPayment':fixtime(gr['machine_time']+t),'application id':ids, 'description':grants[grant][4]})
 
         return {'grants':grants_names}
 class user_put(BaseModel):
@@ -506,17 +576,9 @@ def admin_disapprove_grant(user_id: str = Body(...), grant_id: str = Body(...)):
             else:
                 return {'success': False, 'message': 'Grant ID not found for user.'}
         else:
-            return {'success': False, 'message': 'User not found.'}
+                            return {'success': False, 'message': 'User not found.'}
 
 
-
-
-
-
-
-
-
-
-
-
-
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
